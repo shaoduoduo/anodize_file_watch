@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
 }
 
@@ -65,7 +66,7 @@ void MainWindow::on_pushButton_stop_clicked()
 }
 
 //启动线程
-void MainWindow::on_pushButton_start_clicked()
+    void MainWindow::on_pushButton_start_clicked()
 {
     qDebug() << "MainThreadid: " << (int)QThread::currentThreadId();
 //这个线程已经做成父类，改为调用他的子类
@@ -108,8 +109,8 @@ void MainWindow::on_pushButton_start_clicked()
     connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
 
 
-    m_thread_fileread.start();
-
+        m_thread_fileread.start();
+        Start_file_watcher();//开启文件监视器
 }
     void MainWindow::deal_from_fileread(QStringList s)
     {
@@ -117,5 +118,44 @@ void MainWindow::on_pushButton_start_clicked()
         {
             ui->text_output->append(s.at(i));
         }
+
+    }
+
+
+    void MainWindow::Start_file_watcher(void)
+    {
+        #if 1
+
+//                QStringList list ;
+//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Alarm";
+//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod1-Historic";
+//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod2-Historic";
+//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod3-Historic";
+//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TC_Data";
+//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TEMP-Historic";
+//                      QStringList s=  fswatcher.addPaths(list);
+//                     qDebug()<<"文件监视器添加"<<"------>"<<s.at(0);
+                   bool isOK= fswatcher.addPath("//10.10.10.98/anodize_data/Alarm");
+                    if(true==isOK)
+                        qDebug()<<"监视成功";
+                     isOK= fswatcher.addPath("//10.10.10.98/anodize_data/Alarm/Alarm_190824.csv");
+                     if(true==isOK)
+                         qDebug()<<"监视成功";
+                    connect(&fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
+                    connect(&fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
+//                    connect(&fswatcher,SIGNAL(directoryChanged(QString)),thread_fileread,SLOT(dirChanged(QString)));
+//                    connect(&fswatcher,SIGNAL(fileChanged(QString)),thread_fileread,SLOT(fileChanged(QString)));
+
+#endif
+
+    }
+    void    MainWindow::dirChanged(QString path)
+    {
+        qDebug()<<path<<"  -------dir修改";
+
+    }
+    void    MainWindow::fileChanged(QString path)
+    {
+        qDebug()<<path<<"  ------file修改";
 
     }

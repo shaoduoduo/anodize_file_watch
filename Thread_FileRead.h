@@ -15,7 +15,7 @@
 #include    <QDataStream>
 #include    <QTextStream>
 #include    <QStringList>
-#include    <QFileSystemWatcher>
+
 class Thread_FileRead  : public MoveToThreadTest
 {
         Q_OBJECT
@@ -29,7 +29,7 @@ signals:
         signalFileStrtoSql(QString s);
 private:
 //读文件相关
-        QFileSystemWatcher fswatcher;
+
         QString  srcDirPath;//文件路径
         QDir dir;//文件地址
         QStringList nameFilters;//文件类型
@@ -43,6 +43,10 @@ public slots:
     virtual void doWork();
     virtual void start();
     virtual void stop();
+        //文件监视器 处理槽函数
+    void    dirChanged(QString path);
+    void    fileChanged(QString path);
+
 
 };
 

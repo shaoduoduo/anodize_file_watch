@@ -32,7 +32,7 @@ void Thread_FileRead::start()
     while(1)
     {
         QThread::sleep(1);
-        qDebug() << "Thread_FileRead isRuning ";
+     //   qDebug() << "Thread_FileRead isRuning ";
         {
             QMutexLocker locker(&m_Mutex);
             if(m_bRun == false)
@@ -133,7 +133,7 @@ void Thread_FileRead::fileread_init_textstream()
 
                         // QStringList firstData = textStream.readLine();
                     }
-                    qDebug()<<filedata;
+                 //   qDebug()<<filedata;
                     emit signalFileStr(filedata);
 
     }
@@ -143,4 +143,13 @@ void Thread_FileRead::fileread_init_textstream()
 
 
 }
+void    Thread_FileRead::dirChanged(QString path)
+{
+    qDebug()<<path<<"  -------dir修改";
 
+}
+void    Thread_FileRead::fileChanged(QString path)
+{
+    qDebug()<<path<<"  ------file修改";
+
+}

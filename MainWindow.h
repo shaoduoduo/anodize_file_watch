@@ -6,6 +6,7 @@
 #include "MoveToThreadTest2.h"
 #include <Thread_MySQL.h>
 #include "Thread_FileRead.h"
+#include    <QFileSystemWatcher>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,10 @@ private slots:
 
     void on_pushButton_start_clicked();
     void deal_from_fileread(QStringList s);
+//文件监视器 处理槽函数
+    void    dirChanged(QString path);
+    void    fileChanged(QString path);
+
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +46,10 @@ private:
 
     Thread_FileRead        *thread_fileread;
     QThread     m_thread_fileread;
+
+    QFileSystemWatcher fswatcher;//文件监视器
+    void    Start_file_watcher();
+
 
 };
 

@@ -36,8 +36,8 @@ void MoveToThreadTest2::start()
 
     for(;;)
     {
-        QThread::sleep(5);
-        qDebug() << "MoveToThreadTest --->2  isRuning ";
+        QThread::sleep(1);
+    //    qDebug() << "MoveToThreadTest --->2  isRuning ";
 
         {
             QMutexLocker locker(&m_Mutex);
