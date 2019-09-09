@@ -29,7 +29,7 @@ void Thread_MySQL::start()
 
     for(;;)
     {
-        QThread::sleep(1);
+        QThread::sleep(3);
         qDebug() << "Thread_MySQL isRuning ";
 
         {

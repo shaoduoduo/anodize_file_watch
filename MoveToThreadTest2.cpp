@@ -36,7 +36,7 @@ void MoveToThreadTest2::start()
 
     for(;;)
     {
-        QThread::sleep(1);
+        QThread::sleep(5);
         qDebug() << "MoveToThreadTest --->2  isRuning ";
 
         {
