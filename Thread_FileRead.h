@@ -15,13 +15,13 @@
 #include    <QDataStream>
 #include    <QTextStream>
 #include    <QStringList>
-
+#include    <QFileSystemWatcher>
 class Thread_FileRead  : public MoveToThreadTest
 {
         Q_OBJECT
 public:
     explicit Thread_FileRead(MoveToThreadTest *parent = nullptr);
-
+        ~Thread_FileRead();
 void    fileread_init();
 void    fileread_init_textstream();
 signals:
@@ -39,14 +39,20 @@ private:
 
         QByteArray array;
         QStringList filedata;//文件读取内容
+
+        QFileSystemWatcher *fswatcher;//文件监视器
+        void    Start_file_watcher();
+
 public slots:
     virtual void doWork();
     virtual void start();
     virtual void stop();
         //文件监视器 处理槽函数
-    void    dirChanged(QString path);
-    void    fileChanged(QString path);
+            void    dirChanged(QString path);
+            void    fileChanged(QString path);
 
+
+    void    dealmesfrommain(QString s);
 
 };
 

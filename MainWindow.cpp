@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
+
     ui->setupUi(this);
 }
 
@@ -95,9 +96,11 @@ void MainWindow::on_pushButton_stop_clicked()
     thread_mysql->moveToThread(&m_thread_sql);
     connect(&m_thread_sql,&QThread::started,thread_mysql,&Thread_MySQL::start);
     connect(&m_thread_sql,&QThread::finished,thread_mysql,&Thread_MySQL::deleteLater);
-    //thread_mysql->doWork();
+    connect(this,SIGNAL(signalsendtoMysql(QString)),thread_mysql,
+            SLOT(dealmesfrommain(QString)),Qt::QueuedConnection);
     m_thread_sql.start();
 
+    emit signalsendtoMysql("=-=-=-=-");
 #endif
     //开启文件读取线程
     thread_fileread    =new Thread_FileRead();
@@ -107,10 +110,18 @@ void MainWindow::on_pushButton_stop_clicked()
 
     //connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
     connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
+////文件监视器
+//    connect(this,&MainWindow::signaldirChanged,thread_fileread,&Thread_FileRead::dirChanged_frommain);
+//    connect(this,&MainWindow::signalfileChanged,thread_fileread,&Thread_FileRead::fileChanged_frommain);
+//通信
+    connect(this,&MainWindow::signalsendtofile,thread_fileread,
+            &Thread_FileRead::dealmesfrommain,Qt::QueuedConnection);
 
 
         m_thread_fileread.start();
-        Start_file_watcher();//开启文件监视器
+
+       // Start_file_watcher();//开启文件监视器---改为子线程进行
+
 }
     void MainWindow::deal_from_fileread(QStringList s)
     {
@@ -122,40 +133,4 @@ void MainWindow::on_pushButton_stop_clicked()
     }
 
 
-    void MainWindow::Start_file_watcher(void)
-    {
-        #if 1
 
-//                QStringList list ;
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Alarm";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod1-Historic";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod2-Historic";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod3-Historic";
-//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TC_Data";
-//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TEMP-Historic";
-//                      QStringList s=  fswatcher.addPaths(list);
-//                     qDebug()<<"文件监视器添加"<<"------>"<<s.at(0);
-                   bool isOK= fswatcher.addPath("//10.10.10.98/anodize_data/Alarm");
-                    if(true==isOK)
-                        qDebug()<<"监视成功";
-                     isOK= fswatcher.addPath("//10.10.10.98/anodize_data/Alarm/Alarm_190824.csv");
-                     if(true==isOK)
-                         qDebug()<<"监视成功";
-                    connect(&fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
-                    connect(&fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
-//                    connect(&fswatcher,SIGNAL(directoryChanged(QString)),thread_fileread,SLOT(dirChanged(QString)));
-//                    connect(&fswatcher,SIGNAL(fileChanged(QString)),thread_fileread,SLOT(fileChanged(QString)));
-
-#endif
-
-    }
-    void    MainWindow::dirChanged(QString path)
-    {
-        qDebug()<<path<<"  -------dir修改";
-
-    }
-    void    MainWindow::fileChanged(QString path)
-    {
-        qDebug()<<path<<"  ------file修改";
-
-    }
