@@ -35,18 +35,16 @@ void Thread_FileRead::start()
 
     doWork();
     fileread_init_textstream();
-//    while(1)
-//    {
-//        QThread::sleep(1);
-//   //     qDebug() << "Thread_FileRead isRuning ";
-//        {
-//            QMutexLocker locker(&m_Mutex);
-//            if(m_bRun == false)
-//                break;
-//        }
-
-
-//    }
+    while(1)
+    {
+         QThread::sleep(1);
+         qDebug() << "Thread_FileRead isRuning ";
+        {
+            QMutexLocker locker(&m_Mutex);
+            if(m_bRun == false)
+                break;
+        }
+    }
 }
 
 void Thread_FileRead::stop()
@@ -164,8 +162,8 @@ void Thread_FileRead::fileread_init()//函数不再使用
                  isOK= fswatcher->addPath("//10.10.10.98/anodize_data/Alarm/Alarm_190824.csv");
                  if(true==isOK)
                      qDebug()<<"监视成功";
-                connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
-                connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
+                connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)),Qt::DirectConnection);
+                connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)),Qt::DirectConnection);
 
 #endif
 
