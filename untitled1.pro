@@ -28,14 +28,16 @@ SOURCES += \
     MoveToThreadTest.cpp \
     MoveToThreadTest2.cpp \
     Thread_MySQL.cpp \
-    Thread_FileRead.cpp
+    Thread_FileRead.cpp \
+    Fileinfo_Class.cpp
 
 HEADERS += \
         MainWindow.h \
     MoveToThreadTest.h \
     MoveToThreadTest2.h \
     Thread_MySQL.h \
-    Thread_FileRead.h
+    Thread_FileRead.h \
+    Fileinfo_Class.h
 
 FORMS += \
         MainWindow.ui

@@ -96,12 +96,12 @@ void MainWindow::on_pushButton_stop_clicked()
     thread_mysql->moveToThread(&m_thread_sql);
     connect(&m_thread_sql,&QThread::started,thread_mysql,&Thread_MySQL::start);
     connect(&m_thread_sql,&QThread::finished,thread_mysql,&Thread_MySQL::deleteLater);
-    connect(this,SIGNAL(signalsendtoMysql(QString)),thread_mysql,
-            SLOT(dealmesfrommain(QString)),Qt::QueuedConnection);
+    connect(this,SIGNAL(signalsendtoMysql(QString)),thread_mysql,SLOT(dealmesfrommain(QString)),Qt::QueuedConnection);
     m_thread_sql.start();
 
     emit signalsendtoMysql("=-=-=-=-");
 #endif
+
     //开启文件读取线程
     thread_fileread    =new Thread_FileRead();
     thread_fileread->moveToThread(&m_thread_fileread);
@@ -110,17 +110,13 @@ void MainWindow::on_pushButton_stop_clicked()
 
     //connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
     connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
-////文件监视器
-//    connect(this,&MainWindow::signaldirChanged,thread_fileread,&Thread_FileRead::dirChanged_frommain);
-//    connect(this,&MainWindow::signalfileChanged,thread_fileread,&Thread_FileRead::fileChanged_frommain);
-//通信
-    connect(this,&MainWindow::signalsendtofile,thread_fileread,
-            &Thread_FileRead::dealmesfrommain,Qt::QueuedConnection);
+#if 1
+    //通信
+    connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
 
+#endif
 
         m_thread_fileread.start();
-
-       // Start_file_watcher();//开启文件监视器---改为子线程进行
 
 }
     void MainWindow::deal_from_fileread(QStringList s)
@@ -129,6 +125,7 @@ void MainWindow::on_pushButton_stop_clicked()
         {
             ui->text_output->append(s.at(i));
         }
+
 
     }
 

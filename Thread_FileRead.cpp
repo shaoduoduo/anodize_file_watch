@@ -3,13 +3,30 @@
 Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(parent)
 {
         m_bRun = true;
-        Start_file_watcher();
+
+
+
+
 }
 
 Thread_FileRead::~Thread_FileRead()
 {
-        delete fswatcher;
+//           delete fswatcher;
+
+//        for(int i=0;i<FILENAME_MAX;i++)
+//        {
+//            myfile[i].pfile->close();
+//            delete myfile[i].pfile;
+//            if(true == myfile[i].isOK)
+//            {
+//                delete myfile[i].textStream;
+
+//            }
+//        }
 }
+
+
+
 void Thread_FileRead::doWork()
 {
     QString msg = QString("%1 -> %2 threadid:[%3]")
@@ -19,7 +36,7 @@ void Thread_FileRead::doWork()
 
     qDebug() << msg;
 
-
+        Start_file_watcher();
 
 }
 
@@ -34,7 +51,7 @@ void Thread_FileRead::start()
     qDebug() << msg;
 
     doWork();
-    fileread_init_textstream();
+
     while(1)
     {
          QThread::sleep(1);
@@ -60,53 +77,43 @@ void Thread_FileRead::stop()
 }
 
 
-void Thread_FileRead::fileread_init()//函数不再使用
+void Thread_FileRead::fileread_init()//
 {
-
-    //线程内容，执行文件读取
-    srcDirPath = "//10.10.10.98/anodize_data/Anod1-Historic";//提供文件
-    dir=QDir(srcDirPath);
-
-    nameFilters << "*.csv" << "*.*";
-    filelist = dir.entryList(nameFilters, QDir::Files|QDir::Readable, QDir::Name);
-    filenum = filelist.size();//文件数量
-    q_filelist =filelist.join("\r");//文件清单
-    srcDirPath += "/AN19082317020001.csv";//具体文件路径
-
- //  QFile file;//文件指针
-
-    QFile file(srcDirPath);//打开文件
-    bool isok = file.open(QIODevice::ReadOnly);//以只读的方式打开文件
-
-
-     if(isok == true)
+    #if 0
+    for(int i=0;i<FILENAME_MAX;i++)
     {
-                    array +=file.readLine();
-                  while(file.atEnd() == false)
-                 {
-                        array += file.readLine();//将文件中的读取的内容保存在字节数组中。
-                  }
+
+        myfile[i].fileDirPath =defaultpath;//"//10.10.10.98/anodize_data/Anod1-Historic"//文件目录
+        myfile[i].dir       =QDir(myfile[i].srcDirPath);//打开路径
+        myfile[i].nameFilters<< "*.csv";//文件类型
+        myfile[i].filelist =myfile[i].dir.entryList(myfile[i].nameFilters,
+                                                    QDir::Files|QDir::Readable, QDir::Name);
+        myfile[i].filenum =myfile[i].filelist.size();//文件数量
+        myfile[i].srcDirPath =defaultpath+defaultdirlist.at(i);//具体文件路径??
+        myfile[i].pfile=new QFile(myfile[i].srcDirPath);
+        myfile[i].isOK = myfile[i].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
+        if(true == myfile[i].isOK)
+        {
+            myfile[i].textStream = new QTextStream(myfile[i].pfile);
+            myfile[i].textStream->setCodec("GB2312");
+            myfile[i].textStream->readLine();
+
+            while`(myfile[i].textStream->atEnd() == false)
+            {
+                 myfile[i].filedata <<myfile[i].textStream->readLine();
+            }
+             emit signalFileStr(myfile[i].filedata);
+
+        }
     }
-     else
-         qDebug()<<"文件读取失败";
-    file.close();//文件读取完毕后关闭文件。
- //   qDebug()<<array;
-//    QString str="filethread id= ";
-        QString str=array;
-//    str += QString::number(int(QThread::currentThreadId()));
-//   str += "  ->";
-//   str +=array.data();
-    qDebug()<<str;
-    //emit signalFileStr(str);
-    //emit signalFileStrtoSql("kevin");
-
-
-
+    #endif
 }
+
 
 
     void Thread_FileRead::fileread_init_textstream()
 {
+#if 0
     //线程内容，执行文件读取
     srcDirPath = "//10.10.10.98/anodize_data/Anod1-Historic";//提供文件
     dir=QDir(srcDirPath);
@@ -139,27 +146,28 @@ void Thread_FileRead::fileread_init()//函数不再使用
      else
          qDebug()<<"文件读取失败";
     file.close();//文件读取完毕后关闭文件。
-
+#endif
 
 }
 
     void Thread_FileRead::Start_file_watcher(void)
 {
-    #if 1
- QFileSystemWatcher *fswatcher = new QFileSystemWatcher();
-//                QStringList list ;
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Alarm";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod1-Historic";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod2-Historic";
-//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic/Anod3-Historic";
-//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TC_Data";
-//                      list<<"//10.10.10.98/anodize_data/Anod1-Historic/TEMP-Historic";
+
+ //               QFileSystemWatcher *fswatcher = new QFileSystemWatcher();
+                    #if 0
+//                      QStringList list ;
+//                    list<<"//10.10.10.98/anodize_data/Alarm";
+//                    list<<"//10.10.10.98/anodize_data/Anod1-Historic";
+//                    list<<"//10.10.10.98/anodize_data/Anod2-Historic";
+//                    list<<"//10.10.10.98/anodize_data/Anod3-Historic";
+//                    list<<"//10.10.10.98/anodize_data/TC_Data";
+//                    list<<"//10.10.10.98/anodize_data/TEMP-Historic";
 //                      QStringList s=  fswatcher.addPaths(list);
 //                     qDebug()<<"文件监视器添加"<<"------>"<<s.at(0);
-               bool isOK= fswatcher->addPath("//10.10.10.98/anodize_data/Alarm");
+               bool isOK= fswatcher->addPath(defaultpath);
                 if(true==isOK)
                     qDebug()<<"监视成功";
-                 isOK= fswatcher->addPath("//10.10.10.98/anodize_data/Alarm/Alarm_190824.csv");
+                 isOK= fswatcher->addPath(QString(defaultpath+defaultdirlist.at(0)) );
                  if(true==isOK)
                      qDebug()<<"监视成功";
                 connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)),Qt::DirectConnection);
