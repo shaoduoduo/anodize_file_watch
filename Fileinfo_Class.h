@@ -22,7 +22,8 @@ enum textindex
     ANOD1,
     ANOD2,
     ANOD3,
-    TCDATA,
+    TCDATA1,
+    TCDATA2,
     TEMPHIS,
     FILENUM
 

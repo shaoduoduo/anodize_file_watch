@@ -99,6 +99,15 @@ void Thread_FileRead::fileread_init()//
         if(0 == myfile[i].filelist.size())
             continue;
         myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(myfile[i].filelist.size()-1);//具体文件路径
+        if(i==TCDATA1||i==TCDATA2)
+        {
+            if(myfile[i].filelist.size()!=2)//if it has two file
+                continue;
+                if(i==TCDATA1)//针对天车数据，专门进行特殊处理
+                    myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(0);
+                else
+                    myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(1);
+        }
         myfile[i].pfile=new QFile(myfile[i].srcDirPath);
         myfile[i].isOK = myfile[i].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
         if(true == myfile[i].isOK)
@@ -176,12 +185,15 @@ void Thread_FileRead::fileread_init()//
 
                     if(true==isOK)
                         qDebug()<<myfile[i].fileDirPath<<"路径监视成功";
-
+                    else
+                        qDebug()<<myfile[i].fileDirPath<<"路径监视添加失败";
                     if(true == myfile[i].isOK)
                    {
                         isOK= fswatcher->addPath(myfile[i].srcDirPath);
                      if(true==isOK)
                          qDebug()<<myfile[i].srcDirPath<<"文件监视成功";
+                     else
+                         qDebug()<<myfile[i].srcDirPath<<"文件监视添加失败";
                     }
 
 
@@ -251,10 +263,8 @@ void Thread_FileRead::fileread_init()//
                                     {
                                          myfile[i].filedata <<myfile[i].textStream->readLine();
                                     }
-
                                      emit signalFileStr(myfile[i].filedata);
                                 }
-
                              }
                         }
                 }

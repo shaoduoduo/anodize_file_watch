@@ -42,7 +42,7 @@ private:
         Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
 
          const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
-                                    <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TEMP-Historic/");
+                                    <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TC_Data/"<<"/TEMP-Historic/");
        // const   QString defaultpath="//10.10.10.98/anodize_data";
            QString defaultpath="C:/Users/gyshao/Desktop/data";
 
