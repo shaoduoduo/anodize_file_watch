@@ -50,8 +50,8 @@ private:
 #if 1
         Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
 #endif
-         const  QStringList defaultdirlist=(QStringList()<<"/Alarm"<<"/Anod1-Historic"<<"/Anod2-Historic"
-                                    <<"/Anod3-Historic"<<"/TC_Data"<<"/TEMP-Historic");
+         const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
+                                    <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TEMP-Historic/");
         const   QString defaultpath="//10.10.10.98/anodize_data";
        //    QString defaultpath="C:/Users/gyshao/Desktop/data";
 
@@ -65,7 +65,7 @@ public slots:
             void    fileChanged(QString path);
             void    dealmesfrommain(QString s);
 
-            void handleTimeout();  //定时器超时处理函数
+            void    handleTimeout();  //定时器超时处理函数
 
 };
 

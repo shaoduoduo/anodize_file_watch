@@ -37,7 +37,7 @@ void Thread_FileRead::doWork()
     qDebug() << msg;
 
         Start_file_watcher();
-
+        fileread_init();
 
         m_pTimer = new QTimer(this);
         connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
@@ -84,45 +84,28 @@ void Thread_FileRead::stop()
 
 void Thread_FileRead::fileread_init()//
 {
-#if 0
-    myfile[0].fileDirPath =defaultpath;//"//10.10.10.98/anodize_data/Anod1-Historic"//文件目录
-    myfile[0].dir       =QDir(myfile[0].srcDirPath);//打开路径
-    myfile[0].nameFilters<< "*.csv";//文件类型
-    myfile[0].filelist =myfile[0].dir.entryList(myfile[0].nameFilters,
-                                                QDir::Files|QDir::Readable, QDir::Name);
-    myfile[0].filenum =myfile[0].filelist.size();//文件数量
-    myfile[0].srcDirPath =defaultpath+defaultdirlist.at(0);//具体文件路径??
-    myfile[0].pfile=new QFile(myfile[0].srcDirPath);
-    myfile[0].isOK = myfile[0].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
-    if(true == myfile[0].isOK)
-    {
-        myfile[0].textStream = new QTextStream(myfile[0].pfile);
-        myfile[0].textStream->setCodec("GB2312");
-        myfile[0].textStream->readLine();
 
-        while(myfile[0].textStream->atEnd() == false)
-        {
-             myfile[0].filedata <<myfile[0].textStream->readLine();
-        }
-         emit signalFileStr(myfile[0].filedata);
-
-    }
-#endif
     #if 1
-    for(int i=0;i<FILENAME_MAX;i++)
+    for(int i=0;i<FILENUM;i++)
     {
+        ;
+        QString ss=myfile[i].fileDirPath =defaultpath+defaultdirlist.at(i);//"//10.10.10.98/anodize_data/Anod1-Historic"//文件目录
 
-        myfile[i].fileDirPath =defaultpath;//"//10.10.10.98/anodize_data/Anod1-Historic"//文件目录
-        myfile[i].dir       =QDir(myfile[i].srcDirPath);//打开路径
+        myfile[i].dir       =QDir(myfile[i].fileDirPath);//打开路径
+
         myfile[i].nameFilters<< "*.csv";//文件类型
-        myfile[i].filelist =myfile[i].dir.entryList(myfile[i].nameFilters,
-                                                    QDir::Files|QDir::Readable, QDir::Name);
+
+        myfile[i].filelist =myfile[i].dir.entryList(myfile[i].nameFilters,QDir::Files|QDir::Readable, QDir::Name);
+
         myfile[i].filenum =myfile[i].filelist.size();//文件数量
-        myfile[i].srcDirPath =defaultpath+defaultdirlist.at(i);//具体文件路径??
+        if(0 == myfile[i].filenum)
+            continue;
+        myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(myfile[i].filenum-1);//具体文件路径??
         myfile[i].pfile=new QFile(myfile[i].srcDirPath);
         myfile[i].isOK = myfile[i].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
         if(true == myfile[i].isOK)
         {
+            qDebug()<<"打开文件成功";
             myfile[i].textStream = new QTextStream(myfile[i].pfile);
             myfile[i].textStream->setCodec("GB2312");
             myfile[i].textStream->readLine();
