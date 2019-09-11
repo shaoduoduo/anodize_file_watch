@@ -6,6 +6,9 @@
 
 #include <QMutex>
 #include <QDebug>
+
+
+
 class MoveToThreadTest : public QObject
 {
     Q_OBJECT
@@ -20,7 +23,6 @@ public slots:
     virtual void doWork();
     virtual void start();
     virtual void stop();
-
 
 private:
 

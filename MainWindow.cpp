@@ -5,6 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
     ui->setupUi(this);
 }
 
@@ -65,7 +67,7 @@ void MainWindow::on_pushButton_stop_clicked()
 }
 
 //启动线程
-void MainWindow::on_pushButton_start_clicked()
+    void MainWindow::on_pushButton_start_clicked()
 {
     qDebug() << "MainThreadid: " << (int)QThread::currentThreadId();
 //这个线程已经做成父类，改为调用他的子类
@@ -79,7 +81,7 @@ void MainWindow::on_pushButton_start_clicked()
     m_pMoveThread->doWork();
     m_Thread.start();
     #endif
-
+#if 1
     m_pMoveThread2 = new MoveToThreadTest2();
     m_pMoveThread2->moveToThread(&m_Thread2);
     connect(&m_Thread2,&QThread::started,m_pMoveThread2,&MoveToThreadTest2::start);
@@ -87,27 +89,45 @@ void MainWindow::on_pushButton_start_clicked()
     //connect(&m_Thread2,&QThread::finished,this,&MainWindow::threadFinished);
     m_pMoveThread2->doWork();
     m_Thread2.start();
-
+#endif
+#if 1
     //开启数据库线程
     thread_mysql    =new Thread_MySQL();
     thread_mysql->moveToThread(&m_thread_sql);
     connect(&m_thread_sql,&QThread::started,thread_mysql,&Thread_MySQL::start);
     connect(&m_thread_sql,&QThread::finished,thread_mysql,&Thread_MySQL::deleteLater);
-    thread_mysql->doWork();
+    connect(this,SIGNAL(signalsendtoMysql(QString)),thread_mysql,SLOT(dealmesfrommain(QString)),Qt::QueuedConnection);
     m_thread_sql.start();
 
-
-
-
-
+    emit signalsendtoMysql("=-=-=-=-");
+#endif
 
     //开启文件读取线程
     thread_fileread    =new Thread_FileRead();
     thread_fileread->moveToThread(&m_thread_fileread);
     connect(&m_thread_fileread,&QThread::started,thread_fileread,&Thread_FileRead::start);
     connect(&m_thread_fileread,&QThread::finished,thread_fileread,&Thread_FileRead::deleteLater);
-    thread_fileread->doWork();
-    m_thread_fileread.start();
 
+    //connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
+    connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
+#if 1
+    //通信
+    connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
+
+#endif
+
+        m_thread_fileread.start();
 
 }
+    void MainWindow::deal_from_fileread(QStringList s)
+    {
+        for(int i = 0; i< s.size();++i)
+        {
+            ui->text_output->append(s.at(i));
+        }
+
+
+    }
+
+
+

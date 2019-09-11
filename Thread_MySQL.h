@@ -18,6 +18,7 @@ public slots:
     virtual void start();
     virtual void stop();
 
+    void    dealmesfrommain(QString s);
 };
 
 #endif // MYSQLTHREAD_H

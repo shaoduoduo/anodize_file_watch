@@ -3,20 +3,69 @@
 #include <QObject>
 #include "MoveToThreadTest.h"
 
+
+#include <QFileDialog>
+
+#include <iostream>
+#include <iomanip>
+#include <QByteArray>
+
+#include    <QDebug>
+#include    <QThread>
+#include    <QDataStream>
+#include    <QTextStream>
+#include    <QStringList>
+#include    <QFileSystemWatcher>
+#include    <Fileinfo_Class.h>
+#include    <QTimer>
+
+#define TIMER_TIMEOUT   (1*1000)
+class QTimer;
 class Thread_FileRead  : public MoveToThreadTest
 {
         Q_OBJECT
 public:
     explicit Thread_FileRead(MoveToThreadTest *parent = nullptr);
-
-
+        ~Thread_FileRead();
+void    fileread_init();
+void    fileread_init_textstream();
 signals:
+        signalFileStr(QStringList s);
+        signalFileStrtoSql(QString s);
+private:
+//读文件相关
 
+//        QString  srcDirPath;//文件路径
+//        QDir dir;//文件地址
+//        QStringList nameFilters;//文件类型
+//        QStringList filelist;//文件清单
+//        int filenum;//文件数量
+//        QString q_filelist;//文件清单字符串，用于显示用
 
+//        QByteArray array;
+//        QStringList filedata;//文件读取内容
+
+       QFileSystemWatcher *fswatcher;//文件监视器
+        void    Start_file_watcher();
+#if 1
+        Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
+#endif
+         const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
+                                    <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TEMP-Historic/");
+        const   QString defaultpath="//10.10.10.98/anodize_data";
+       //    QString defaultpath="C:/Users/gyshao/Desktop/data";
+
+            QTimer *m_pTimer;//定时器
 public slots:
     virtual void doWork();
     virtual void start();
     virtual void stop();
+        //文件监视器 处理槽函数
+            void    dirChanged(QString path);
+            void    fileChanged(QString path);
+            void    dealmesfrommain(QString s);
+
+            void    handleTimeout();  //定时器超时处理函数
 
 };
 

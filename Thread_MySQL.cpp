@@ -30,7 +30,7 @@ void Thread_MySQL::start()
     for(;;)
     {
         QThread::sleep(1);
-        qDebug() << "Thread_MySQL isRuning ";
+    //    qDebug() << "Thread_MySQL isRuning ";
 
         {
             QMutexLocker locker(&m_Mutex);
@@ -50,4 +50,8 @@ void Thread_MySQL::stop()
 
     QMutexLocker locker(&m_Mutex);
     m_bRun = false;
+}
+void    Thread_MySQL::dealmesfrommain(QString s)
+{
+    qDebug()<<s<<"sql thread";
 }
