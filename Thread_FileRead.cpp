@@ -95,10 +95,10 @@ void Thread_FileRead::fileread_init()//
 
         myfile[i].filelist =myfile[i].dir.entryList(myfile[i].nameFilters,QDir::Files|QDir::Readable, QDir::Name);
 
-        myfile[i].filenum =myfile[i].filelist.size();//文件数量
-        if(0 == myfile[i].filenum)
+        //文件数量
+        if(0 == myfile[i].filelist.size())
             continue;
-        myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(myfile[i].filenum-1);//具体文件路径
+        myfile[i].srcDirPath =myfile[i].fileDirPath+myfile[i].filelist.at(myfile[i].filelist.size()-1);//具体文件路径
         myfile[i].pfile=new QFile(myfile[i].srcDirPath);
         myfile[i].isOK = myfile[i].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
         if(true == myfile[i].isOK)
@@ -226,10 +226,35 @@ void Thread_FileRead::fileread_init()//
                             qDebug()<<myfile[i].srcDirPath<<"旧文件移除监视成功";
                             myfile[i].srcDirPath =path+newsrcDirPath;
                             myfile[i].filelist = newfilelist;
-                            isOK= fswatcher->addPath(path+newsrcDirPath);
+                            isOK= fswatcher->addPath(myfile[i].srcDirPath);
                          if(true==isOK)
                             {
                                 qDebug()<<newsrcDirPath<<"更新文件监视成功";
+                                //读取新文件内容
+                                //将myfile textstream更新至新的文件
+
+
+                                //myfile[i].pfile=new QFile(myfile[i].srcDirPath);//打开的新的文件
+                                myfile[i].pfile->setFileName(myfile[i].srcDirPath);
+
+                                myfile[i].isOK = myfile[i].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
+                                if(true == myfile[i].isOK)
+                                {
+                                    qDebug()<<"打开新文件成功";
+                                    myfile[i].textStream->setDevice(myfile[i].pfile);
+                                    myfile[i].textStream->setCodec("GB2312");
+                                    myfile[i].textStream->readLine();//drop first line
+
+                                    //初始化：更新文件行数清单等变量
+                                    myfile[i].filedata.clear();
+                                    while(myfile[i].textStream->atEnd() == false)
+                                    {
+                                         myfile[i].filedata <<myfile[i].textStream->readLine();
+                                    }
+
+                                     emit signalFileStr(myfile[i].filedata);
+                                }
+
                              }
                         }
                 }
@@ -243,6 +268,7 @@ void Thread_FileRead::fileread_init()//
         int i=0,j=0;
         int n=0;
         QStringList filedata_temp;
+        filedata_temp.clear();
         qDebug()<<path<<"------file修改";
         for(i=0;i<FILENUM;i++)//make sure which file is changed
         {
@@ -251,7 +277,7 @@ void Thread_FileRead::fileread_init()//
         }
         if(true == myfile[i].isOK)
         {
-
+                qDebug()<<"myfile[i].isOK";
 //            myfile[i].textStream->seek(0);//set pos
 //            myfile[i].textStream->pos();//return pos
             myfile[i].textStream->seek(0);
@@ -260,6 +286,8 @@ void Thread_FileRead::fileread_init()//
             {
                  filedata_temp <<myfile[i].textStream->readLine();
             }
+            qDebug()<<"filedata_temp.size() ->"<<filedata_temp.size();
+            qDebug()<<"myfile[i].filedata.size() ->"<<myfile[i].filedata.size();
             if(filedata_temp.size()>myfile[i].filedata.size())//have new line
             {
                 n =filedata_temp.size()-myfile[i].filedata.size();
@@ -270,11 +298,10 @@ void Thread_FileRead::fileread_init()//
                     }
                     myfile[i].filedata =   filedata_temp;
             }
-
-
-
         }
     }
+
+
     void Thread_FileRead::handleTimeout()
     {
       //  qDebug()<<"Enter timeout processing function\n";
@@ -310,10 +337,7 @@ bool same =false;
                     }
                     if(false==same)
                         return commonColumns[i];
-
-
                   }
-
         }
         return NULL;
     }
