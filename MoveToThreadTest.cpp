@@ -3,6 +3,8 @@
 MoveToThreadTest::MoveToThreadTest(QObject *parent) : QObject(parent)
 {
     m_bRun = true;
+
+
 }
 
 

@@ -17,6 +17,10 @@
 #include    <QStringList>
 #include    <QFileSystemWatcher>
 #include    <Fileinfo_Class.h>
+#include    <QTimer>
+
+#define TIMER_TIMEOUT   (1*1000)
+class QTimer;
 class Thread_FileRead  : public MoveToThreadTest
 {
         Q_OBJECT
@@ -41,16 +45,17 @@ private:
 //        QByteArray array;
 //        QStringList filedata;//文件读取内容
 
- //       QFileSystemWatcher fswatcher;//文件监视器
+       QFileSystemWatcher *fswatcher;//文件监视器
         void    Start_file_watcher();
-#if 0
+#if 1
         Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
 #endif
-           QStringList defaultdirlist=(QStringList()<<"/Alarm"<<"/Anod1-Historic"<<"/Anod2-Historic"
+         const  QStringList defaultdirlist=(QStringList()<<"/Alarm"<<"/Anod1-Historic"<<"/Anod2-Historic"
                                     <<"/Anod3-Historic"<<"/TC_Data"<<"/TEMP-Historic");
-       // const   QString defaultpath="//10.10.10.98/anodize_data";
-           QString defaultpath="C:/Users/gyshao/Desktop/data";
+        const   QString defaultpath="//10.10.10.98/anodize_data";
+       //    QString defaultpath="C:/Users/gyshao/Desktop/data";
 
+            QTimer *m_pTimer;//定时器
 public slots:
     virtual void doWork();
     virtual void start();
@@ -59,6 +64,8 @@ public slots:
             void    dirChanged(QString path);
             void    fileChanged(QString path);
             void    dealmesfrommain(QString s);
+
+            void handleTimeout();  //定时器超时处理函数
 
 };
 

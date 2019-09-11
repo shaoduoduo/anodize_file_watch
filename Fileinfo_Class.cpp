@@ -10,5 +10,5 @@ Fileinfo_Class::Fileinfo_Class(QObject *parent) : QObject(parent)
 
 Fileinfo_Class::~Fileinfo_Class()
 {
-    delete this;
+
 }

@@ -11,7 +11,7 @@ Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(pa
 
 Thread_FileRead::~Thread_FileRead()
 {
-//           delete fswatcher;
+           //delete fswatcher;
 
 //        for(int i=0;i<FILENAME_MAX;i++)
 //        {
@@ -38,6 +38,11 @@ void Thread_FileRead::doWork()
 
         Start_file_watcher();
 
+
+        m_pTimer = new QTimer(this);
+        connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
+
+        m_pTimer->start(TIMER_TIMEOUT);
 }
 
 
@@ -52,16 +57,16 @@ void Thread_FileRead::start()
 
     doWork();
 
-    while(1)
-    {
-         QThread::sleep(1);
-         qDebug() << "Thread_FileRead isRuning ";
-        {
-            QMutexLocker locker(&m_Mutex);
-            if(m_bRun == false)
-                break;
-        }
-    }
+//    while(1)
+//    {
+//         QThread::sleep(1);
+//         qDebug() << "Thread_FileRead isRuning ";
+//        {
+//            QMutexLocker locker(&m_Mutex);
+//            if(m_bRun == false)
+//                break;
+//        }
+//    }
 }
 
 void Thread_FileRead::stop()
@@ -79,7 +84,31 @@ void Thread_FileRead::stop()
 
 void Thread_FileRead::fileread_init()//
 {
-    #if 0
+#if 0
+    myfile[0].fileDirPath =defaultpath;//"//10.10.10.98/anodize_data/Anod1-Historic"//文件目录
+    myfile[0].dir       =QDir(myfile[0].srcDirPath);//打开路径
+    myfile[0].nameFilters<< "*.csv";//文件类型
+    myfile[0].filelist =myfile[0].dir.entryList(myfile[0].nameFilters,
+                                                QDir::Files|QDir::Readable, QDir::Name);
+    myfile[0].filenum =myfile[0].filelist.size();//文件数量
+    myfile[0].srcDirPath =defaultpath+defaultdirlist.at(0);//具体文件路径??
+    myfile[0].pfile=new QFile(myfile[0].srcDirPath);
+    myfile[0].isOK = myfile[0].pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
+    if(true == myfile[0].isOK)
+    {
+        myfile[0].textStream = new QTextStream(myfile[0].pfile);
+        myfile[0].textStream->setCodec("GB2312");
+        myfile[0].textStream->readLine();
+
+        while(myfile[0].textStream->atEnd() == false)
+        {
+             myfile[0].filedata <<myfile[0].textStream->readLine();
+        }
+         emit signalFileStr(myfile[0].filedata);
+
+    }
+#endif
+    #if 1
     for(int i=0;i<FILENAME_MAX;i++)
     {
 
@@ -98,7 +127,7 @@ void Thread_FileRead::fileread_init()//
             myfile[i].textStream->setCodec("GB2312");
             myfile[i].textStream->readLine();
 
-            while`(myfile[i].textStream->atEnd() == false)
+            while(myfile[i].textStream->atEnd() == false)
             {
                  myfile[i].filedata <<myfile[i].textStream->readLine();
             }
@@ -153,8 +182,8 @@ void Thread_FileRead::fileread_init()//
     void Thread_FileRead::Start_file_watcher(void)
 {
 
- //               QFileSystemWatcher *fswatcher = new QFileSystemWatcher();
-                    #if 0
+               QFileSystemWatcher *fswatcher = new QFileSystemWatcher();
+#if 1
 //                      QStringList list ;
 //                    list<<"//10.10.10.98/anodize_data/Alarm";
 //                    list<<"//10.10.10.98/anodize_data/Anod1-Historic";
@@ -167,11 +196,12 @@ void Thread_FileRead::fileread_init()//
                bool isOK= fswatcher->addPath(defaultpath);
                 if(true==isOK)
                     qDebug()<<"监视成功";
-                 isOK= fswatcher->addPath(QString(defaultpath+defaultdirlist.at(0)) );
+                QString s =defaultpath+defaultdirlist.at(0);
+                 isOK= fswatcher->addPath(s);
                  if(true==isOK)
                      qDebug()<<"监视成功";
-                connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)),Qt::DirectConnection);
-                connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)),Qt::DirectConnection);
+                connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
+                connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
 
 #endif
 
@@ -193,4 +223,11 @@ void Thread_FileRead::fileread_init()//
     {
         qDebug()<<path<<"  Thread_FileRead------file修改";
 
+    }
+    void Thread_FileRead::handleTimeout()
+    {
+        qDebug()<<"Enter timeout processing function\n";
+        if(m_pTimer->isActive()){
+            m_pTimer->start();
+        }
     }
