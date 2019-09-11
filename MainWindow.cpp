@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete      m_pMoveThread2 ;
+    delete      thread_mysql;
+    delete      thread_fileread;
     delete ui;
 }
     void MainWindow::threadFinished()
@@ -110,6 +113,9 @@ void MainWindow::on_pushButton_stop_clicked()
 
     //connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
     connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
+
+    connect(thread_fileread,&Thread_FileRead::signalFileS,this,&MainWindow::deals_from_fileread);
+
 #if 1
     //通信
     connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
@@ -128,6 +134,10 @@ void MainWindow::on_pushButton_stop_clicked()
 
 
     }
+    void MainWindow::deals_from_fileread(QString s)
+    {
+            ui->text_output->append(s);
 
+    }
 
 

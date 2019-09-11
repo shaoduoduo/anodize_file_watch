@@ -27,7 +27,7 @@ private slots:
 
     void on_pushButton_start_clicked();
     void deal_from_fileread(QStringList s);
-
+    void deals_from_fileread(QString s);
 
 
 private:

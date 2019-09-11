@@ -20,9 +20,9 @@ public:
     bool m_bRun;
 
 public slots:
-    virtual void doWork();
-    virtual void start();
-    virtual void stop();
+//     void doWork();
+//     void start();
+//     void stop();
 
 private:
 

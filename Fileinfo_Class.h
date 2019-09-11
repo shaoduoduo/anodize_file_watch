@@ -38,8 +38,8 @@ public:
     QTextStream *streamadodize[FILENUM];
 
 
-    QString  srcDirPath;//文件路径
-    QString  fileDirPath;//文件目录
+    QString  srcDirPath;//文件路径      //10.10.10.98/anodize_data/Anod1-Historic/Aalrm_190824
+    QString  fileDirPath;//文件目录     //10.10.10.98/anodize_data/Anod1-Historic
     QDir dir;//文件地址
     QStringList nameFilters;//文件类型
     QStringList filelist;//文件清单
@@ -47,10 +47,13 @@ public:
 //    QString q_filelist;//文件清单字符串，用于显示用
 
     QByteArray array;
-    QStringList filedata;//文件读取内容
+    QStringList filedata;//target 文件读取内容
+
     QFile *pfile;
     bool isOK;
     QTextStream *textStream;
+
+
 public slots:
 
 
