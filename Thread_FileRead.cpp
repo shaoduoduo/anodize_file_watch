@@ -4,9 +4,6 @@ Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(pa
 {
         m_bRun = true;
 
-
-
-
 }
 
 Thread_FileRead::~Thread_FileRead()
@@ -35,12 +32,13 @@ void Thread_FileRead::doWork()
 
     qDebug() << msg;
 
-
-        fileread_init();
+        fileread_init();//文件初始化，读取当前已有文件内容//读取失败，对方未开机。如何处理？？更新的读取进度应该和数据库内容一致才行。
         Start_file_watcher();//监视当前有效的路径和最新的文件
         m_pTimer = new QTimer(this);
         connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
         m_pTimer->start(TIMER_TIMEOUT);
+
+
 }
 
 
@@ -118,13 +116,14 @@ void Thread_FileRead::fileread_init()//
             myfile[i].textStream->readLine();//drop first line
 
             //初始化：更新文件行数清单等变量
-
+            QStringList buflist=QStringList();
             while(myfile[i].textStream->atEnd() == false)
             {
-                 myfile[i].filedata <<myfile[i].textStream->readLine();
-            }
+                 myfile[i].filedata <<myfile[i].textStream->readLine();//reload existing data dont need to send
 
-             emit signalFileStr(myfile[i].filedata);
+            }
+            //
+            emit signalFileStr(myfile[i].filedata);
 
         }
     }
@@ -304,7 +303,11 @@ void Thread_FileRead::fileread_init()//
                 qDebug()<<n;
                 for(j=0;j<n;j++)
                   {
+                    QStringList prolist;
+                    prolist.clear();
+                    prolist =prolist<<i<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
+                    emit    signalFilelisttoSql(prolist);
                     }
                     myfile[i].filedata =   filedata_temp;
             }
@@ -314,7 +317,12 @@ void Thread_FileRead::fileread_init()//
 
     void Thread_FileRead::handleTimeout()
     {
-      //  qDebug()<<"Enter timeout processing function\n";
+        QString msg = QString("%1 -> %2 threadid:[%3]")
+                .arg(__FILE__)
+                .arg(__FUNCTION__)
+                .arg((int)QThread::currentThreadId());
+        qDebug() << msg;
+
         if(m_pTimer->isActive()){
             m_pTimer->start();
         }

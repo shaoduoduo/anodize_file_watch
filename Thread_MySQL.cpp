@@ -6,7 +6,11 @@ Thread_MySQL::Thread_MySQL(MoveToThreadTest *parent) : MoveToThreadTest(parent)
 }
 
 
+Thread_MySQL::~Thread_MySQL()
+{
+         delete m_pTimer;
 
+}
 void Thread_MySQL::doWork()
 {
     QString msg = QString("%1 -> %2 threadid:[%3]")
@@ -15,6 +19,11 @@ void Thread_MySQL::doWork()
             .arg((int)QThread::currentThreadId());
 
     qDebug() << msg;
+
+    m_pTimer = new QTimer(this);
+    connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
+    m_pTimer->start(TIMER_TIMEOUT);
+
 }
 
 void Thread_MySQL::start()
@@ -27,17 +36,17 @@ void Thread_MySQL::start()
 
     doWork();
 
-    for(;;)
-    {
-        QThread::sleep(1);
-    //    qDebug() << "Thread_MySQL isRuning ";
+//    for(;;)
+//    {
+//        QThread::sleep(1);
+//    //    qDebug() << "Thread_MySQL isRuning ";
 
-        {
-            QMutexLocker locker(&m_Mutex);
-            if(m_bRun == false)
-                break;
-        }
-    }
+//        {
+//            QMutexLocker locker(&m_Mutex);
+//            if(m_bRun == false)
+//                break;
+//        }
+//    }
 }
 
 void Thread_MySQL::stop()
@@ -55,3 +64,21 @@ void    Thread_MySQL::dealmesfrommain(QString s)
 {
     qDebug()<<s<<"sql thread";
 }
+
+
+    void    Thread_MySQL::deallistfromfile(QStringList s)
+    {
+            qDebug()<<"mysql 收到 data"<<s.at(1);
+    }
+    void Thread_MySQL::handleTimeout()
+    {
+        QString msg = QString("%1 -> %2 threadid:[%3]")
+                .arg(__FILE__)
+                .arg(__FUNCTION__)
+                .arg((int)QThread::currentThreadId());
+        qDebug() << msg;
+
+        if(m_pTimer->isActive()){
+            m_pTimer->start();
+        }
+    }

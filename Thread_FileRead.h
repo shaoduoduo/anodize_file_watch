@@ -33,6 +33,7 @@ signals:
         signalFileS(QString s);
         signalFileStr(QStringList s);
         signalFileStrtoSql(QString s);
+        signalFilelisttoSql(QStringList s);
 private:
 //读文件相关
 
@@ -47,6 +48,7 @@ private:
            QString defaultpath="C:/Users/gyshao/Desktop/data";
 
             QTimer *m_pTimer;//定时器
+
         QString getQStringListIntersect( QStringList& commonColumns,
                                          QStringList& currentColumns);
 public slots:
