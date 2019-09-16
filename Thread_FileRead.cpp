@@ -305,7 +305,7 @@ void Thread_FileRead::fileread_init()//
                   {
                     QStringList prolist;
                     prolist.clear();
-                    prolist =prolist<<i<<filedata_temp.at(myfile[i].filedata.size()+j);
+                    prolist =prolist<<QString::number(i)<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
                     emit    signalFilelisttoSql(prolist);
                     }

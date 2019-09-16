@@ -18,6 +18,8 @@
 #include    <QFileSystemWatcher>
 #include    <Fileinfo_Class.h>
 #include    <QTimer>
+#include    <protocol/protocol_anodizing.h>
+
 
 #define TIMER_TIMEOUT   (1*1000)
 class QTimer;

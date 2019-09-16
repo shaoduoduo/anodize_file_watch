@@ -33,7 +33,6 @@ MainWindow::~MainWindow()
 //停止线程
 void MainWindow::on_pushButton_stop_clicked()
 {
-
      //   closethread();
 }
 

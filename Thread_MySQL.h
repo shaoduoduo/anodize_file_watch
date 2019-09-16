@@ -4,6 +4,7 @@
 
 #include <QObject>
 #include "MoveToThreadTest.h"
+#include    <protocol/protocol_anodizing.h>
 
 
 
