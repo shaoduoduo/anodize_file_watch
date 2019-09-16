@@ -22,7 +22,8 @@ enum textindex
     ANOD1,
     ANOD2,
     ANOD3,
-    TCDATA,
+    TCDATA1,
+    TCDATA2,
     TEMPHIS,
     FILENUM
 
@@ -38,19 +39,22 @@ public:
     QTextStream *streamadodize[FILENUM];
 
 
-    QString  srcDirPath;//文件路径
-    QString  fileDirPath;//文件目录
+    QString  srcDirPath;//文件路径      //10.10.10.98/anodize_data/Anod1-Historic/Aalrm_190824
+    QString  fileDirPath;//文件目录     //10.10.10.98/anodize_data/Anod1-Historic
     QDir dir;//文件地址
     QStringList nameFilters;//文件类型
     QStringList filelist;//文件清单
-    int filenum;//文件数量
+ //   int filenum;//文件数量
 //    QString q_filelist;//文件清单字符串，用于显示用
 
-    QByteArray array;
-    QStringList filedata;//文件读取内容
+//    QByteArray array;
+    QStringList filedata;//target 文件读取内容
+
     QFile *pfile;
     bool isOK;
     QTextStream *textStream;
+
+
 public slots:
 
 

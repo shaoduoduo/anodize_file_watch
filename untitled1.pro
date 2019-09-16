@@ -29,7 +29,9 @@ SOURCES += \
     MoveToThreadTest2.cpp \
     Thread_MySQL.cpp \
     Thread_FileRead.cpp \
-    Fileinfo_Class.cpp
+    Fileinfo_Class.cpp \
+    protocol/protocol_anodizing.cpp \
+    protocol/protocol.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -37,7 +39,10 @@ HEADERS += \
     MoveToThreadTest2.h \
     Thread_MySQL.h \
     Thread_FileRead.h \
-    Fileinfo_Class.h
+    Fileinfo_Class.h \
+    protocol/protocol_list.h \
+    protocol/protocol_anodizing.h \
+    protocol/protocol.h
 
 FORMS += \
         MainWindow.ui
