@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
         delete      m_pMoveThread2 ;
         delete      thread_mysql;
         delete      thread_fileread;
-
+        delete      thread_client;
         delete m_pTimer;
         delete ui;
 
@@ -87,9 +87,19 @@ void MainWindow::on_pushButton_stop_clicked()
 
      #endif
 
-             m_pMoveThread2->doWork();
+         //开启TCP客户端线程
+         thread_client    =new Thread_Client;
+         thread_client->moveToThread(&m_thread_client);
+         connect(&m_thread_client,&QThread::started,thread_client,&Thread_Client::start);
+         connect(&m_thread_client,&QThread::finished,thread_client,&Thread_Client::deleteLater);
+
+
+
+
+
              m_thread_sql.start();
              m_thread_fileread.start();
+             m_thread_client.start();
  }
 
 //关闭线程
@@ -133,6 +143,16 @@ void MainWindow::on_pushButton_stop_clicked()
          m_thread_fileread.wait();
 
          thread_fileread= NULL;
+     }
+
+     if(thread_client)
+     {
+         qDebug() << "线程有效，关闭线程thread_client " ;
+         thread_client->stop();
+         m_thread_client.quit();
+         m_thread_client.wait();
+
+         thread_client= NULL;
      }
  }
 

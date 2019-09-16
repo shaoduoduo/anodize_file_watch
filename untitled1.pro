@@ -31,7 +31,8 @@ SOURCES += \
     Thread_FileRead.cpp \
     Fileinfo_Class.cpp \
     protocol/protocol_anodizing.cpp \
-    protocol/protocol.cpp
+    protocol/protocol.cpp \
+    Thread_Client.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -42,7 +43,8 @@ HEADERS += \
     Fileinfo_Class.h \
     protocol/protocol_list.h \
     protocol/protocol_anodizing.h \
-    protocol/protocol.h
+    protocol/protocol.h \
+    Thread_Client.h
 
 FORMS += \
         MainWindow.ui

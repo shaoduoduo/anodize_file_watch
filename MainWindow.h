@@ -8,7 +8,7 @@
 #include "Thread_FileRead.h"
 #include    <QFileSystemWatcher>
 #include    <QProcess>
-
+#include    "Thread_Client.h"
 
 class QProcess;
 
@@ -51,6 +51,9 @@ private:
 
     Thread_FileRead        *thread_fileread;
     QThread     m_thread_fileread;
+
+    Thread_Client        *thread_client;
+    QThread     m_thread_client;
 
     QTimer *m_pTimer;//定时器
 signals:
