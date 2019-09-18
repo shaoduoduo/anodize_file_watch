@@ -16,7 +16,7 @@ class QProcess;
 namespace Ui {
 class MainWindow;
 }
-#define TIMER_TIMEOUT   (1*1000)
+#define TIMER_TIMEOUT   (5*1000)
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -35,8 +35,16 @@ private slots:
     void on_pushButton_start_clicked();
     void deal_from_fileread(QStringList s);
     void deals_from_fileread(QString s);
-
+    void deal_from_client(QStringList s);
             void    handleTimeout();  //定时器超时处理函数
+            void on_pushButton_clicked();
+
+            void on_pushButton_connect_clicked();
+
+            void on_pushButton_send_clicked();
+
+            void on_pushButton_disconnect_clicked();
+
 private:
     Ui::MainWindow *ui;
     MoveToThreadTest    *   m_pMoveThread ;
@@ -61,6 +69,7 @@ signals:
 
         signalsendtofile(QString s);
         signalsendtoMysql(QString s);
+        signalsendtoclient(QStringList s);
 };
 
 #endif // MAINWINDOW_H

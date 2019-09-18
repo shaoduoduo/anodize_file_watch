@@ -21,7 +21,7 @@
 #include    <protocol/protocol_anodizing.h>
 
 
-#define TIMER_TIMEOUT   (1*1000)
+#define TIMER_TIMEOUT   (5*1000)
 class QTimer;
 class Thread_FileRead  : public MoveToThreadTest
 {

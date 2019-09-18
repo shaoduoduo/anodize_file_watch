@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui widgets
-
+QT += network
 TARGET = untitled1
 TEMPLATE = app
 
