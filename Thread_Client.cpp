@@ -73,6 +73,11 @@ void Thread_Client::handleTimeout()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
+
+        msg =QString::number(HEART)+",\n"+QString::number(HEART);
+        tcpSocket->write(msg.toLatin1(),msg.length());
+
+
     if(m_pTimer->isActive()){
         m_pTimer->start();
     }
@@ -89,9 +94,7 @@ void Thread_Client::handleTimeout()
                      useName =s.at(1);
                      ip =s.at(2);
                      port    =   s.at(3).toInt();
-
                      emit signalEnter();//开启TCP通信
-
                     break;
                 case PRO_MAIN_DISCON:
                     //
@@ -197,3 +200,37 @@ void Thread_Client::handleTimeout()
         tcpSocket->write(msg.toLatin1(),msg.length());
 
     }
+
+
+    void    Thread_Client::dealmesfromfile(QStringList s)
+    {
+        if(true == s.isEmpty())
+            return;
+
+        QString msg =s.join(",\n");
+        switch (s.at(0).toInt()) {
+        case ANODIZE:
+
+
+            tcpSocket->write(msg.toLatin1(),msg.length());
+
+            break;
+        case PLASMA:
+
+            break;
+        case OPC:
+
+            break;
+        case ARCSPRAY:
+
+            break;
+        case OEE:
+
+            break;
+        default:
+            break;
+        }
+
+    }
+
+

@@ -263,6 +263,11 @@ void Thread_FileRead::fileread_init()//
                                          myfile[i].filedata <<myfile[i].textStream->readLine();
                                     }
                                      emit signalFileStr(myfile[i].filedata);
+
+                                    QStringList s = QStringList(QString("%1%2").arg(ANODIZE) .arg(i));//ANODIZE为该线程是阳极氧化，i为对应的文件目录
+                                    s<<myfile[i].filedata;
+
+                                    emit    signalFiletoClient(s);//send to tcp server
                                 }
                              }
                         }
@@ -301,14 +306,19 @@ void Thread_FileRead::fileread_init()//
             {
                 n =filedata_temp.size()-myfile[i].filedata.size();
                 qDebug()<<n;
-                for(j=0;j<n;j++)
+                QStringList prolist;
+                prolist.clear();
+                prolist<<QString::number(ANODIZE);//封装协议包头部
+                prolist<<QString::number(i);
+                for(j=0;j<n;j++)//read the new add content in file
                   {
-                    QStringList prolist;
-                    prolist.clear();
-                    prolist =prolist<<QString::number(i)<<filedata_temp.at(myfile[i].filedata.size()+j);
+
+                    prolist =prolist<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
-                    emit    signalFilelisttoSql(prolist);
+                   // emit    signalFilelisttoSql(prolist);//改发给server，不需要给数据库
                     }
+                //取filedata_temp新增部分
+                emit    signalFiletoClient(prolist);//发给客户端
                     myfile[i].filedata =   filedata_temp;
             }
         }

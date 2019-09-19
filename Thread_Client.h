@@ -7,30 +7,13 @@
 #include <QTcpSocket>
 #include    <QMessageBox>
 #include    <QByteArray>
+
+#include  "protocol/protocol.h"
+
+
 #define TIMER_TIMEOUT   (5*1000)
 
-enum pro_client
-{
-    PRO_CLIENT_IP,
-    PRO_CLIENT_CONN,
-    PRO_CLIENT_DISCONN,
-    PRO_CLIENT_RECEIVE,
-    PRO_CLIENT_ERROR,
-    PRO_CLIENT_NUM
-};
 
-enum pro_main
-{
-    PRO_MAIN_INFO,
-    PRO_MAIN_NAME,
-    PRO_MAIN_IP,
-    PRO_MAIN_PORT,
-    PRO_MAIN_SEND,
-    PRO_MAIN_DISCON,
-    PRO_MAIN_ERROR,
-
-    PRO_MAIN_NUM
-};
 
 class Thread_Client : public MoveToThreadTest
 {
@@ -63,7 +46,7 @@ public slots:
              void stop();
             void    handleTimeout();  //定时器超时处理函数
             void    dealmesfrommain(QStringList s);
-
+            void    dealmesfromfile(QStringList s);
 
             //TCP
             void    slotEnter();

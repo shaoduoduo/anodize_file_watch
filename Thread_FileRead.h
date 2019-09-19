@@ -19,6 +19,7 @@
 #include    <Fileinfo_Class.h>
 #include    <QTimer>
 #include    <protocol/protocol_anodizing.h>
+#include  "protocol/protocol.h"
 
 
 #define TIMER_TIMEOUT   (5*1000)
@@ -34,6 +35,7 @@ void    fileread_init_textstream();
 signals:
         signalFileS(QString s);
         signalFileStr(QStringList s);
+        signalFiletoClient(QStringList s);
         signalFileStrtoSql(QString s);
         signalFilelisttoSql(QStringList s);
 private:

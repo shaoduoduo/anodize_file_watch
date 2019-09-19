@@ -104,6 +104,7 @@ void MainWindow::on_pushButton_stop_clicked()
 
 
          connect(this,&MainWindow::signalsendtoclient,thread_client,&Thread_Client::dealmesfrommain);
+         connect(thread_fileread,&Thread_FileRead::signalFiletoClient,thread_client,&Thread_Client::dealmesfromfile);
 
 
              m_thread_sql.start();

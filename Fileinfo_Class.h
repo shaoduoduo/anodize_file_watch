@@ -15,19 +15,7 @@
 #include    <QTextStream>
 #include    <QStringList>
 #include    <QFileSystemWatcher>
-//存放文件清单
-enum textindex
-{
-    ALARM,
-    ANOD1,
-    ANOD2,
-    ANOD3,
-    TCDATA1,
-    TCDATA2,
-    TEMPHIS,
-    FILENUM
-
-};
+#include  "protocol/protocol.h"
 
 class Fileinfo_Class : public QObject
 {
