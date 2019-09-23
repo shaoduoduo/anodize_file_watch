@@ -14,6 +14,8 @@ MoveToThreadTest::~MoveToThreadTest()
 
            // delete m_pTimer;
 }
+
+
 //void MoveToThreadTest::doWork()
 //{
 //    QString msg = QString("%1 -> %2 threadid:[%3]")

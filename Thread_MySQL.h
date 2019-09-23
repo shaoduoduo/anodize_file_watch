@@ -8,7 +8,7 @@
 
 
 
-#define TIMER_TIMEOUT   (1*1000)
+#define TIMER_TIMEOUT   (5*1000)
 class Thread_MySQL : public MoveToThreadTest
 {
     Q_OBJECT

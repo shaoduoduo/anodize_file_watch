@@ -10,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pTimer = new QTimer(this);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
     m_pTimer->start(TIMER_TIMEOUT);
+
+
+    ui->pushButton_connect->setEnabled(true);
+    ui->pushButton_disconnect->setEnabled(false);
+    ui->textEdit_IP->setText("10.10.10.98");
+    ui->textEdit_port->setText("8080");
+    ui->textEdit_name->setText("kube");
 }
 
 MainWindow::~MainWindow()
@@ -18,9 +25,9 @@ MainWindow::~MainWindow()
         delete      m_pMoveThread2 ;
         delete      thread_mysql;
         delete      thread_fileread;
-
-        delete m_pTimer;
-        delete ui;
+        delete      thread_client;
+        delete      m_pTimer;
+        delete      ui;
 
 }
     void MainWindow::threadFinished()
@@ -87,9 +94,22 @@ void MainWindow::on_pushButton_stop_clicked()
 
      #endif
 
-             m_pMoveThread2->doWork();
+         //开启TCP客户端线程
+         thread_client    =new Thread_Client;
+         thread_client->moveToThread(&m_thread_client);
+         connect(&m_thread_client,&QThread::started,thread_client,&Thread_Client::start);
+         connect(&m_thread_client,&QThread::finished,thread_client,&Thread_Client::deleteLater);
+
+         connect(thread_client,&Thread_Client::signalClientlisttomain,this,&MainWindow::deal_from_client);
+
+
+         connect(this,&MainWindow::signalsendtoclient,thread_client,&Thread_Client::dealmesfrommain);
+         connect(thread_fileread,&Thread_FileRead::signalFiletoClient,thread_client,&Thread_Client::dealmesfromfile);
+
+
              m_thread_sql.start();
              m_thread_fileread.start();
+             m_thread_client.start();
  }
 
 //关闭线程
@@ -134,6 +154,16 @@ void MainWindow::on_pushButton_stop_clicked()
 
          thread_fileread= NULL;
      }
+
+     if(thread_client)
+     {
+         qDebug() << "线程有效，关闭线程thread_client " ;
+         thread_client->stop();
+         m_thread_client.quit();
+         m_thread_client.wait();
+
+         thread_client= NULL;
+     }
  }
 
 
@@ -143,7 +173,7 @@ void MainWindow::on_pushButton_stop_clicked()
 
 }
 
- void MainWindow::deal_from_fileread(QStringList s)
+    void MainWindow::deal_from_fileread(QStringList s)
     {
         for(int i = 0; i< s.size();++i)
         {
@@ -167,3 +197,78 @@ void MainWindow::on_pushButton_stop_clicked()
             m_pTimer->start();
         }
     }
+
+        void MainWindow::deal_from_client(QStringList s)
+        {
+            switch (s.at(0).toInt())
+            {
+            case PRO_CLIENT_IP:
+                //收到本机IP地址
+              ui->label_IP->setText(QString("本地IP地址为 %1").arg(s.at(1)));
+
+                // ui->label_IP->setText(s.at(1));
+
+                break;
+
+            case PRO_CLIENT_CONN:
+                 ui->text_output->append(s.at(1));
+             break;
+
+             case PRO_CLIENT_DISCONN:
+                 ui->text_output->append(s.at(1));
+              break;
+             case PRO_CLIENT_RECEIVE:
+                ui->text_output->append(s.at(1));
+              break;
+
+
+            case PRO_CLIENT_ERROR:
+
+                ui->text_output->append(s.at(1));
+                break;
+
+            default:
+                break;
+            }
+
+        }
+
+void MainWindow::on_pushButton_clicked()
+{
+    //ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_pushButton_connect_clicked()
+{
+    QStringList s;
+    s<<QString("%1").arg(PRO_MAIN_INFO);
+    //ui->textEdit_name->tex
+//    QString str;
+   s<<ui->textEdit_name->toPlainText();
+   s<< ui->textEdit_IP->toPlainText();
+
+   s<<ui->textEdit_port->toPlainText();
+    emit    signalsendtoclient(s);
+
+    ui->pushButton_connect->setEnabled(false);
+    ui->pushButton_disconnect->setEnabled(true);
+}
+
+void MainWindow::on_pushButton_send_clicked()
+{
+    QStringList s;
+    s<<QString("%1").arg(PRO_MAIN_SEND);
+    s<<ui->textEdit_send->toPlainText();
+    emit    signalsendtoclient(s);
+
+}
+
+void MainWindow::on_pushButton_disconnect_clicked()
+{
+    QStringList s;
+    s<<QString("%1").arg(PRO_MAIN_DISCON);
+    emit    signalsendtoclient(s);
+
+    ui->pushButton_connect->setEnabled(true);
+    ui->pushButton_disconnect->setEnabled(false);
+}

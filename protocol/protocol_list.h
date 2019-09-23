@@ -21,4 +21,68 @@ enum AnodizingProtocol
 
 
 
+enum pro_client//客户端线程发出协议
+{
+    PRO_CLIENT_IP,
+    PRO_CLIENT_CONN,
+    PRO_CLIENT_DISCONN,
+    PRO_CLIENT_RECEIVE,
+    PRO_CLIENT_ERROR,
+
+    PRO_CLIENT_NUM
+};
+
+enum pro_main//主线程发出协议
+{
+    PRO_MAIN_INFO,
+    PRO_MAIN_NAME,
+    PRO_MAIN_IP,
+    PRO_MAIN_PORT,
+    PRO_MAIN_SEND,
+    PRO_MAIN_DISCON,
+    PRO_MAIN_ERROR,
+
+    PRO_MAIN_NUM
+};
+
+enum pro_file//文件线程发出协议
+{
+    PRO_FILE_ALARM,
+    PRO_FILE_ANODI,//
+    PRO_FILE_TC,
+    PRO_FILE_TEMP,
+
+    PRO_FILE_NUM
+};
+
+
+//存放文件清单
+enum PRO_INDEX_ANODIZE
+{
+    ALARM,
+    ANOD1,
+    ANOD2,
+    ANOD3,
+    TCDATA1,
+    TCDATA2,
+    TEMPHIS,
+    FILENUM
+
+};
+
+enum PROTOCOL_INDEX
+{
+    ANODIZE,//阳极氧化数据
+    PLASMA,
+    OPC,
+    ARCSPRAY,
+    OEE,
+    HEART,//心跳数据
+    PROTOCOL_NUM
+};
+//协议顺序
+//0               1:?   2                 3    4
+//PROTOCOL_INDEX,SIZE,PRO_INDEX_ANODIZE,DATA,CHECK
+
+
 #endif // PROTOCOL_LIST_H
