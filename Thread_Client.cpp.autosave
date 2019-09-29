@@ -167,8 +167,6 @@ void Thread_Client::handleTimeout()
 //首次链接，发送心跳包
       QString  msg =QString::number(ANODIZE)+","+QString::number(HEART);
         tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
-
-
     }
     void    Thread_Client::slotDisconnected()
     {

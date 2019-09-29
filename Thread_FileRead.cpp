@@ -312,7 +312,6 @@ void Thread_FileRead::fileread_init()//
                 prolist<<QString::number(i);
                 for(j=0;j<n;j++)//read the new add content in file
                   {
-
                     prolist =prolist<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
                    // emit    signalFilelisttoSql(prolist);//改发给server，不需要给数据库
@@ -327,11 +326,11 @@ void Thread_FileRead::fileread_init()//
 
     void Thread_FileRead::handleTimeout()
     {
-        QString msg = QString("%1 -> %2 threadid:[%3]")
-                .arg(__FILE__)
-                .arg(__FUNCTION__)
-                .arg((int)QThread::currentThreadId());
-        qDebug() << msg;
+//        QString msg = QString("%1 -> %2 threadid:[%3]")
+//                .arg(__FILE__)
+//                .arg(__FUNCTION__)
+//                .arg((int)QThread::currentThreadId());
+//        qDebug() << msg;
 
         if(m_pTimer->isActive()){
             m_pTimer->start();

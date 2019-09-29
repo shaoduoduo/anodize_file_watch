@@ -52,7 +52,8 @@ enum pro_file//文件线程发出协议
     PRO_FILE_TC,
     PRO_FILE_TEMP,
 
-    PRO_FILE_NUM
+    PRO_FILE_NUM,
+
 };
 
 
@@ -66,8 +67,8 @@ enum PRO_INDEX_ANODIZE
     TCDATA1,
     TCDATA2,
     TEMPHIS,
-    FILENUM
-
+    FILENUM,
+    HEART,//心跳数据
 };
 
 enum PROTOCOL_INDEX
@@ -77,7 +78,7 @@ enum PROTOCOL_INDEX
     OPC,
     ARCSPRAY,
     OEE,
-    HEART,//心跳数据
+
     PROTOCOL_NUM
 };
 //协议顺序
