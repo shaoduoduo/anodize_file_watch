@@ -2,7 +2,7 @@
 
 Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(parent)
 {
-        m_bRun = true;
+//        m_bRun = true;
 
 }
 
@@ -73,8 +73,8 @@ void Thread_FileRead::stop()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
-    QMutexLocker locker(&m_Mutex);
-    m_bRun = false;
+//    QMutexLocker locker(&m_Mutex);
+//    m_bRun = false;
 }
 
 

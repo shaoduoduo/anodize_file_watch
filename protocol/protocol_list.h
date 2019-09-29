@@ -69,6 +69,7 @@ enum PRO_INDEX_ANODIZE
     TEMPHIS,
     FILENUM,
     HEART,//心跳数据
+    SEND_MES,
 };
 
 enum PROTOCOL_INDEX

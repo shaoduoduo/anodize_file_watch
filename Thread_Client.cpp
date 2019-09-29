@@ -67,14 +67,15 @@ void Thread_Client::stop()
 
 void Thread_Client::handleTimeout()
 {
-    QString msg = QString("%1 -> %2 threadid:[%3]")
-            .arg(__FILE__)
-            .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
-    qDebug() << msg;
+//    QString msg = QString("%1 -> %2 threadid:[%3]")
+//            .arg(__FILE__)
+//            .arg(__FUNCTION__)
+//            .arg((int)QThread::currentThreadId());
+//    qDebug() << msg;
 
 
-        msg =QString::number(ANODIZE)+","+QString::number(HEART);
+        QString  msg ="";
+               msg=QString::number(ANODIZE)+","+QString::number(HEART);
         tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
     if(m_pTimer->isActive()){
         m_pTimer->start();
@@ -102,9 +103,12 @@ void Thread_Client::handleTimeout()
 //                     qDebug()<<"client recieve"<< "PRO_MAIN_SEND"<<s.at(1);
 //                     emit   signalSend(s.at(1));
                      //取消信号，采用直接发送的方式
-                    if(false == s.at(1).isEmpty())
+                   // if(false == s.at(1).isEmpty())
                     {
-                        QString msg =useName+":"+s.at(1);
+                        QString msg ;
+                        msg.clear();
+                                msg=QString::number(ANODIZE)+",";
+                                msg+=QString::number(SEND_MES)+","+s.at(1);
                         tcpSocket->write(msg.toLatin1(),msg.length());
                      }
                     break;
@@ -165,10 +169,11 @@ void Thread_Client::handleTimeout()
 //        if((length = tcpSocket->write(msg.toLatin1(),msg.length()))!=msg.length())
 //            return;
 //首次链接，发送心跳包
-      QString  msg =QString::number(ANODIZE)+","+QString::number(HEART);
+
+              QString  msg ;
+              msg.clear();
+             msg =QString::number(ANODIZE)+","+QString::number(HEART);
         tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
-
-
     }
     void    Thread_Client::slotDisconnected()
     {

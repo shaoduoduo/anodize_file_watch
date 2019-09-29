@@ -13,12 +13,12 @@ Thread_MySQL::~Thread_MySQL()
 }
 void Thread_MySQL::doWork()
 {
-    QString msg = QString("%1 -> %2 threadid:[%3]")
-            .arg(__FILE__)
-            .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
+//    QString msg = QString("%1 -> %2 threadid:[%3]")
+//            .arg(__FILE__)
+//            .arg(__FUNCTION__)
+//            .arg((int)QThread::currentThreadId());
 
-    qDebug() << msg;
+//    qDebug() << msg;
 
     m_pTimer = new QTimer(this);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
@@ -57,8 +57,8 @@ void Thread_MySQL::stop()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
-    QMutexLocker locker(&m_Mutex);
-    m_bRun = false;
+//    QMutexLocker locker(&m_Mutex);
+//    m_bRun = false;
 }
 void    Thread_MySQL::dealmesfrommain(QString s)
 {
@@ -72,11 +72,11 @@ void    Thread_MySQL::dealmesfrommain(QString s)
     }
     void Thread_MySQL::handleTimeout()
     {
-        QString msg = QString("%1 -> %2 threadid:[%3]")
-                .arg(__FILE__)
-                .arg(__FUNCTION__)
-                .arg((int)QThread::currentThreadId());
-        qDebug() << msg;
+//        QString msg = QString("%1 -> %2 threadid:[%3]")
+//                .arg(__FILE__)
+//                .arg(__FUNCTION__)
+//                .arg((int)QThread::currentThreadId());
+//        qDebug() << msg;
 
         if(m_pTimer->isActive()){
             m_pTimer->start();

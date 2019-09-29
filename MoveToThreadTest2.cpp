@@ -55,6 +55,6 @@ void MoveToThreadTest2::stop()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
-    QMutexLocker locker(&m_Mutex);
-    m_bRun = false;
+//    QMutexLocker locker(&m_Mutex);
+//    m_bRun = false;
 }
