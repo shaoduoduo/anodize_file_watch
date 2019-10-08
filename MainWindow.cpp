@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->pushButton_connect->setEnabled(true);
     ui->pushButton_disconnect->setEnabled(false);
-    ui->textEdit_IP->setText("10.10.10.148");
+    ui->textEdit_IP->setText("10.10.10.78");
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
 }
