@@ -76,7 +76,9 @@ void Thread_Client::handleTimeout()
 
         QString  msg ="";
                msg=QString::number(ANODIZE)+","+QString::number(HEART);
-        tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
+               msg+=",";
+      //  tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
+        tcpSocket->write(msg.toUtf8().data());
     if(m_pTimer->isActive()){
         m_pTimer->start();
     }
@@ -105,11 +107,13 @@ void Thread_Client::handleTimeout()
                      //取消信号，采用直接发送的方式
                    // if(false == s.at(1).isEmpty())
                     {
-                        QString msg ;
-                        msg.clear();
-                                msg=QString::number(ANODIZE)+",";
+
+
+                             QString   msg=QString::number(ANODIZE)+",";
                                 msg+=QString::number(SEND_MES)+","+s.at(1);
-                        tcpSocket->write(msg.toLatin1(),msg.length());
+                                msg+=",";
+                       // tcpSocket->write(msg.toLatin1(),msg.length());
+                        tcpSocket->write(msg.toUtf8().data());
                      }
                     break;
                 case PRO_MAIN_ERROR:
@@ -149,10 +153,10 @@ void Thread_Client::handleTimeout()
                 status  =   true;
             }
             else {//改为心跳包
-//                int length  =0;
-//                QString msg=useName+tr(":is leave ");
-//                if((length = tcpSocket->write(msg.toLatin1(),msg.length()))!=msg.length())
-//                    return;
+                int length  =0;
+                QString msg=useName+tr(":is leave ");
+                if((length = tcpSocket->write(msg.toLatin1(),msg.length()))!=msg.length())
+                    return;
                 tcpSocket->disconnectFromHost();
                 status  =   false;
 
@@ -173,7 +177,9 @@ void Thread_Client::handleTimeout()
               QString  msg ;
               msg.clear();
              msg =QString::number(ANODIZE)+","+QString::number(HEART);
-        tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
+             msg+=",";
+        //tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
+        tcpSocket->write(msg.toUtf8().data());
     }
     void    Thread_Client::slotDisconnected()
     {
@@ -202,7 +208,8 @@ void Thread_Client::handleTimeout()
         if(true == str.isEmpty())
             return;
 
-        tcpSocket->write(str.toLatin1(),str.length());
+        //tcpSocket->write(str.toLatin1(),str.length());
+        tcpSocket->write(str.toUtf8().data());
 
     }
 
@@ -213,12 +220,13 @@ void Thread_Client::handleTimeout()
             return;
 
         QString msg =s.join(",");
+        msg+=",";
         switch (s.at(0).toInt()) {
         case ANODIZE:
 //需要将协议包分成四种数据来源子包吗？
 //---》不分，server直接分配就可以了
-            tcpSocket->write(msg.toLatin1(),msg.length());
-
+           // tcpSocket->write(msg.toLatin1(),msg.length());
+            tcpSocket->write(msg.toUtf8().data());
             break;
         case PLASMA:
 
