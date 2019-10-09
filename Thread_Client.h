@@ -11,7 +11,7 @@
 #include  "protocol/protocol.h"
 
 
-#define TIMER_TIMEOUT   (5*1000)
+#define TIMER_TIMEOUT   (0.5*1000)
 
 
 

@@ -11,12 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
     m_pTimer->start(TIMER_TIMEOUT);
 
+    server_Flag = false;
+    starthread();
 
     ui->pushButton_connect->setEnabled(true);
     ui->pushButton_disconnect->setEnabled(false);
     ui->textEdit_IP->setText("10.10.10.78");
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
+    ui->pushButton_start->setEnabled(false);//关闭开始按键
 }
 
 MainWindow::~MainWindow()
@@ -169,7 +172,7 @@ void MainWindow::on_pushButton_stop_clicked()
 
  void MainWindow::on_pushButton_start_clicked()
 {
-        starthread();
+//        starthread();//不再由按键启动，改为自动启动线程，按键连接
 
 }
 
