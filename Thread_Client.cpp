@@ -220,7 +220,7 @@ void Thread_Client::handleTimeout()
             return;
 
         QString msg =s.join(",");
-        msg+=",";
+      //  msg+=",";
         switch (s.at(0).toInt()) {
         case ANODIZE:
 //需要将协议包分成四种数据来源子包吗？

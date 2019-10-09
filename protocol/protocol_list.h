@@ -85,7 +85,7 @@ enum PROTOCOL_INDEX
 enum PROTOCOL
 {
     PRO_INDEX,// PROTOCOL_INDEX
-    PRO_ID,
+    PRO_ID,     //
     PRO_SIZE,
     PRO_DATA,
 
