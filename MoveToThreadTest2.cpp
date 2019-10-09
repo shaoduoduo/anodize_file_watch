@@ -34,17 +34,17 @@ void MoveToThreadTest2::start()
 
     doWork();
 
-    for(;;)
-    {
-        QThread::sleep(1);
-    //    qDebug() << "MoveToThreadTest --->2  isRuning ";
+//    for(;;)
+//    {
+//        QThread::sleep(1);
+//    //    qDebug() << "MoveToThreadTest --->2  isRuning ";
 
-        {
-            QMutexLocker locker(&m_Mutex);
-            if(m_bRun == false)
-                break;
-        }
-    }
+//        {
+//            QMutexLocker locker(&m_Mutex);
+//            if(m_bRun == false)
+//                break;
+//        }
+//    }
 }
 
 void MoveToThreadTest2::stop()
@@ -55,6 +55,6 @@ void MoveToThreadTest2::stop()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
-    QMutexLocker locker(&m_Mutex);
-    m_bRun = false;
+//    QMutexLocker locker(&m_Mutex);
+//    m_bRun = false;
 }

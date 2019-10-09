@@ -2,7 +2,7 @@
 
 Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(parent)
 {
-        m_bRun = true;
+//        m_bRun = true;
 
 }
 
@@ -73,8 +73,8 @@ void Thread_FileRead::stop()
             .arg((int)QThread::currentThreadId());
     qDebug() << msg;
 
-    QMutexLocker locker(&m_Mutex);
-    m_bRun = false;
+//    QMutexLocker locker(&m_Mutex);
+//    m_bRun = false;
 }
 
 
@@ -212,7 +212,7 @@ void Thread_FileRead::fileread_init()//
     void    Thread_FileRead::dirChanged(QString path)
     {
         int i =0;
-//        qDebug()<<path<<"-------dir修改";
+        qDebug()<<path<<"-------dir修改";
 //                  有文件被修改
 //                  1、文件数量变更
 //                  2、文件被修改
@@ -258,15 +258,20 @@ void Thread_FileRead::fileread_init()//
 
                                     //初始化：更新文件行数清单等变量
                                     myfile[i].filedata.clear();
+                                    //int n=myfile[i].filedata.size();
                                     while(myfile[i].textStream->atEnd() == false)
                                     {
                                          myfile[i].filedata <<myfile[i].textStream->readLine();
                                     }
+                                    //n=myfile[i].filedata.size();
                                      emit signalFileStr(myfile[i].filedata);
 
-                                    QStringList s = QStringList(QString("%1%2").arg(ANODIZE) .arg(i));//ANODIZE为该线程是阳极氧化，i为对应的文件目录
+                                    //QStringList s = QStringList(QString("%1%2%3").arg(ANODIZE) .arg(i).arg(myfile[i].filedata.size()));//ANODIZE为该线程是阳极氧化，i为对应的文件目录
+                                   QStringList s = QStringList(QString::number(ANODIZE));
+                                    s<<QString::number(i);
+                                    s<<QString::number(myfile[i].filedata.size());
                                     s<<myfile[i].filedata;
-
+                                    qDebug()<<s;
                                     emit    signalFiletoClient(s);//send to tcp server
                                 }
                              }
@@ -310,9 +315,9 @@ void Thread_FileRead::fileread_init()//
                 prolist.clear();
                 prolist<<QString::number(ANODIZE);//封装协议包头部
                 prolist<<QString::number(i);
+                prolist<<QString::number(n);//n is the num of new lines
                 for(j=0;j<n;j++)//read the new add content in file
                   {
-
                     prolist =prolist<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
                    // emit    signalFilelisttoSql(prolist);//改发给server，不需要给数据库
@@ -327,11 +332,11 @@ void Thread_FileRead::fileread_init()//
 
     void Thread_FileRead::handleTimeout()
     {
-        QString msg = QString("%1 -> %2 threadid:[%3]")
-                .arg(__FILE__)
-                .arg(__FUNCTION__)
-                .arg((int)QThread::currentThreadId());
-        qDebug() << msg;
+//        QString msg = QString("%1 -> %2 threadid:[%3]")
+//                .arg(__FILE__)
+//                .arg(__FUNCTION__)
+//                .arg((int)QThread::currentThreadId());
+//        qDebug() << msg;
 
         if(m_pTimer->isActive()){
             m_pTimer->start();

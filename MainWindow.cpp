@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->pushButton_connect->setEnabled(true);
     ui->pushButton_disconnect->setEnabled(false);
-    ui->textEdit_IP->setText("10.10.10.98");
-    ui->textEdit_port->setText("8080");
+    ui->textEdit_IP->setText("10.10.10.78");
+    ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
 }
 
@@ -187,11 +187,11 @@ void MainWindow::on_pushButton_stop_clicked()
 
     void MainWindow::handleTimeout()
     {
-        QString msg = QString("%1 -> %2 threadid:[%3]")
-                .arg(__FILE__)
-                .arg(__FUNCTION__)
-                .arg((int)QThread::currentThreadId());
-        qDebug() << msg;
+//        QString msg = QString("%1 -> %2 threadid:[%3]")
+//                .arg(__FILE__)
+//                .arg(__FUNCTION__)
+//                .arg((int)QThread::currentThreadId());
+//        qDebug() << msg;
 
         if(m_pTimer->isActive()){
             m_pTimer->start();
@@ -258,7 +258,9 @@ void MainWindow::on_pushButton_send_clicked()
 {
     QStringList s;
     s<<QString("%1").arg(PRO_MAIN_SEND);
+
     s<<ui->textEdit_send->toPlainText();
+    if(false == ui->textEdit_send->toPlainText().isEmpty())
     emit    signalsendtoclient(s);
 
 }
