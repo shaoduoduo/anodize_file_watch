@@ -40,7 +40,7 @@ void Thread_Client::doWork()
     {
       //  listAddress.at(2).toString()
         QStringList s = QStringList(QString("%1").arg(PRO_CLIENT_IP));
-        s<<listAddress.at(5).toString();
+        s<<listAddress.at(2).toString();
         emit signalClientlisttomain(s);
     }
 }
@@ -49,7 +49,7 @@ void Thread_Client::doWork()
         QString msg = QString("%1 -> %2 threadid:[%3]")
                 .arg(__FILE__)
                 .arg(__FUNCTION__)
-                .arg((int)QThread::currentThreadId());
+                .arg((uint64_t)QThread::currentThreadId());
         qDebug() << msg;
 
         doWork();

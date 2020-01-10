@@ -28,7 +28,7 @@ void Thread_FileRead::doWork()
     QString msg = QString("%1 -> %2 threadid:[%3]")
             .arg(__FILE__)
             .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
+            .arg((uint64_t)QThread::currentThreadId());
 
     qDebug() << msg;
 
@@ -48,21 +48,10 @@ void Thread_FileRead::start()
     QString msg = QString("%1 -> %2 threadid:[%3]")
             .arg(__FILE__)
             .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
+            .arg((uint64_t)QThread::currentThreadId());
     qDebug() << msg;
 
     doWork();
-
-//    while(1)
-//    {
-//         QThread::sleep(1);
-//         qDebug() << "Thread_FileRead isRuning ";
-//        {
-//            QMutexLocker locker(&m_Mutex);
-//            if(m_bRun == false)
-//                break;
-//        }
-//    }
 }
 
 void Thread_FileRead::stop()
@@ -70,11 +59,8 @@ void Thread_FileRead::stop()
     QString msg = QString("%1 -> %2 threadid:[%3]")
             .arg(__FILE__)
             .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
+            .arg((uint64_t)QThread::currentThreadId());
     qDebug() << msg;
-
-//    QMutexLocker locker(&m_Mutex);
-//    m_bRun = false;
 }
 
 
@@ -200,6 +186,7 @@ void Thread_FileRead::fileread_init()//
 
                 connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
                 connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
+
 
 #endif
 }
@@ -350,11 +337,11 @@ void Thread_FileRead::fileread_init()//
         if( commonColumns.count() == 0 || currentColumns.count() == 0 )
         {
     //      commonColumns.clear();
-            return NULL;
+            return nullptr;
         }
     //    commonColumns.sort();
     //    currentColumns.sort();
-bool same =false;
+            bool same =false;
     //    if(commonColumns.count()>currentColumns.count())
         {
                 for( int i = 0; i < commonColumns.count(); i++ )

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
+
 }
 
 MainWindow::~MainWindow()
@@ -70,7 +71,7 @@ void MainWindow::on_pushButton_stop_clicked()
          //
          m_Thread2.start();
      #endif
-     #if 1
+     #if 0
          //开启数据库线程
          thread_mysql    =new Thread_MySQL();
          thread_mysql->moveToThread(&m_thread_sql);
@@ -96,23 +97,20 @@ void MainWindow::on_pushButton_stop_clicked()
 
 
      #endif
-
+     #if 0
          //开启TCP客户端线程
          thread_client    =new Thread_Client;
          thread_client->moveToThread(&m_thread_client);
          connect(&m_thread_client,&QThread::started,thread_client,&Thread_Client::start);
          connect(&m_thread_client,&QThread::finished,thread_client,&Thread_Client::deleteLater);
-
          connect(thread_client,&Thread_Client::signalClientlisttomain,this,&MainWindow::deal_from_client);
-
-
          connect(this,&MainWindow::signalsendtoclient,thread_client,&Thread_Client::dealmesfrommain);
          connect(thread_fileread,&Thread_FileRead::signalFiletoClient,thread_client,&Thread_Client::dealmesfromfile);
+     #endif
 
-
-             m_thread_sql.start();
+//             m_thread_sql.start();
              m_thread_fileread.start();
-             m_thread_client.start();
+//             m_thread_client.start();
  }
 
 //关闭线程
@@ -135,7 +133,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_pMoveThread2->stop();
          m_Thread2.quit();
          m_Thread2.wait();
-         m_pMoveThread2= NULL;
+         m_pMoveThread2= nullptr;
      }
 
      if(thread_mysql)
@@ -145,7 +143,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_thread_sql.quit();
          m_thread_sql.wait();
 
-         thread_mysql= NULL;
+         thread_mysql= nullptr;
      }
 
      if(thread_fileread)
@@ -155,7 +153,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_thread_fileread.quit();
          m_thread_fileread.wait();
 
-         thread_fileread= NULL;
+         thread_fileread= nullptr;
      }
 
      if(thread_client)
@@ -165,7 +163,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_thread_client.quit();
          m_thread_client.wait();
 
-         thread_client= NULL;
+         thread_client= nullptr;
      }
  }
 
