@@ -48,7 +48,7 @@ private:
 
          const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
                                     <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TC_Data/"<<"/TEMP-Historic/");
-       // const   QString defaultpath="//10.10.10.98/anodize_data";
+            // const   QString defaultpath="//10.10.10.98/anodize_data";
            QString defaultpath="C:/Users/gyshao/Desktop/data";
 
             QTimer *m_pTimer;//定时器

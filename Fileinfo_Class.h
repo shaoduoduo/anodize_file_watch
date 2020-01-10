@@ -32,7 +32,7 @@ public:
     QDir dir;//文件地址
     QStringList nameFilters;//文件类型
     QStringList filelist;//文件清单
- //   int filenum;//文件数量
+//   int filenum;//文件数量
 //    QString q_filelist;//文件清单字符串，用于显示用
 
 //    QByteArray array;

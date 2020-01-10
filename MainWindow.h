@@ -64,6 +64,7 @@ private:
     QThread     m_thread_client;
 
     QTimer *m_pTimer;//定时器
+    bool server_Flag;
 signals:
 
 

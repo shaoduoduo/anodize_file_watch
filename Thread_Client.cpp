@@ -40,49 +40,47 @@ void Thread_Client::doWork()
     {
       //  listAddress.at(2).toString()
         QStringList s = QStringList(QString("%1").arg(PRO_CLIENT_IP));
-        s<<listAddress.at(5).toString();
+        s<<listAddress.at(2).toString();
         emit signalClientlisttomain(s);
     }
-
-
 }
-void Thread_Client::start()
-{
-    QString msg = QString("%1 -> %2 threadid:[%3]")
-            .arg(__FILE__)
-            .arg(__FUNCTION__)
-            .arg((int)QThread::currentThreadId());
-    qDebug() << msg;
+    void Thread_Client::start()
+    {
+        QString msg = QString("%1 -> %2 threadid:[%3]")
+                .arg(__FILE__)
+                .arg(__FUNCTION__)
+                .arg((uint64_t)QThread::currentThreadId());
+        qDebug() << msg;
 
-    doWork();
+        doWork();
 
-}
-void Thread_Client::stop()
-{
-
-
-}
-
-
-
-void Thread_Client::handleTimeout()
-{
-//    QString msg = QString("%1 -> %2 threadid:[%3]")
-//            .arg(__FILE__)
-//            .arg(__FUNCTION__)
-//            .arg((int)QThread::currentThreadId());
-//    qDebug() << msg;
-
-
-        QString  msg ="";
-               msg=QString::number(ANODIZE)+","+QString::number(HEART);
-               msg+=",";
-      //  tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
-        tcpSocket->write(msg.toUtf8().data());
-    if(m_pTimer->isActive()){
-        m_pTimer->start();
     }
-}
+    void Thread_Client::stop()
+    {
+
+
+    }
+
+
+
+        void Thread_Client::handleTimeout()
+        {
+        //    QString msg = QString("%1 -> %2 threadid:[%3]")
+        //            .arg(__FILE__)
+        //            .arg(__FUNCTION__)
+        //            .arg((int)QThread::currentThreadId());
+        //    qDebug() << msg;
+
+
+                QString  msg ="";
+                       msg=QString::number(ANODIZE)+","+QString::number(HEART);
+                       msg+=",";
+              //  tcpSocket->write(msg.toLatin1(),msg.length());//发送握手信号
+                tcpSocket->write(msg.toUtf8().data());
+            if(m_pTimer->isActive()){
+                m_pTimer->start();
+            }
+        }
 
 
 
@@ -145,9 +143,10 @@ void Thread_Client::handleTimeout()
                     emit signalClientlisttomain(s);
                     return;
                 }
-                connect(tcpSocket,SIGNAL(connected()),this,SLOT(slotConnected()));
-                connect(tcpSocket,SIGNAL(disconnected()),this,SLOT(slotDisconnected()));
-                connect(tcpSocket,SIGNAL(readyRead()),this,SLOT(dataReceived()));
+                connect(tcpSocket,SIGNAL(connected()),this,SLOT(slotConnected()),Qt::UniqueConnection);//防止重复链接
+                connect(tcpSocket,SIGNAL(disconnected()),this,SLOT(slotDisconnected()),Qt::UniqueConnection);
+                connect(tcpSocket,SIGNAL(readyRead()),this,SLOT(dataReceived()),Qt::UniqueConnection);
+
                 tcpSocket->connectToHost(*serverIP,port);
 
                 status  =   true;
@@ -167,12 +166,6 @@ void Thread_Client::handleTimeout()
         QStringList s = QStringList(QString("%1").arg(PRO_CLIENT_CONN));
         s<<"connect to host";
         emit    signalClientlisttomain(s);
-
-//        int length  =0;
-//        QString msg=useName+tr("enter");
-//        if((length = tcpSocket->write(msg.toLatin1(),msg.length()))!=msg.length())
-//            return;
-//首次链接，发送心跳包
 
               QString  msg ;
               msg.clear();
