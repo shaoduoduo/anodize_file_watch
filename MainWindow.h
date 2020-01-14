@@ -68,9 +68,9 @@ private:
 signals:
 
 
-        signalsendtofile(QString s);
-        signalsendtoMysql(QString s);
-        signalsendtoclient(QStringList s);
+        void signalsendtofile(QString s);
+        void signalsendtoMysql(QString s);
+        void signalsendtoclient(QStringList s);
 };
 
 #endif // MAINWINDOW_H

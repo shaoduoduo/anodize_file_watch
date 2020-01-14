@@ -20,7 +20,7 @@
 #include    <QTimer>
 #include    <protocol/protocol_anodizing.h>
 #include  "protocol/protocol.h"
-
+#include "hislog/HistoryLog.h"
 
 #define TIMER_TIMEOUT   (5*1000)
 class QTimer;
@@ -46,15 +46,17 @@ private:
 
         Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
 
-         const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
+        const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
                                     <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TC_Data/"<<"/TEMP-Historic/");
        // const   QString defaultpath="//10.10.10.98/anodize_data";
-           QString defaultpath="C:/Users/gyshao/Desktop/data";
+        QString defaultpath="C:/Users/gyshao/Desktop/data";
 
-            QTimer *m_pTimer;//定时器
+        QTimer *m_pTimer;//定时器
 
         QString getQStringListIntersect( QStringList& commonColumns,
                                          QStringList& currentColumns);
+
+        HistoryLog *hislog;
 public slots:
              void doWork();
              void start();

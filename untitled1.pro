@@ -23,6 +23,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    hislog/HistoryLog.cpp \
         main.cpp \
         MainWindow.cpp \
     MoveToThreadTest.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     Thread_MySQL.h \
     Thread_FileRead.h \
     Fileinfo_Class.h \
+    hislog/HistoryLog.h \
     protocol/protocol_list.h \
     protocol/protocol_anodizing.h \
     protocol/protocol.h \

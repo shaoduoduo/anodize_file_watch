@@ -4,6 +4,9 @@ Thread_FileRead::Thread_FileRead(MoveToThreadTest *parent) : MoveToThreadTest(pa
 {
 //        m_bRun = true;
 
+hislog = new HistoryLog("./his.json");
+
+
 }
 
 Thread_FileRead::~Thread_FileRead()
@@ -25,12 +28,12 @@ Thread_FileRead::~Thread_FileRead()
 
 void Thread_FileRead::doWork()
 {
-    QString msg = QString("%1 -> %2 threadid:[%3]")
-            .arg(__FILE__)
-            .arg(__FUNCTION__)
-            .arg((uint64_t)QThread::currentThreadId());
+//    QString msg = QString("%1 -> %2 threadid:[%3]")
+//            .arg(__FILE__)
+//            .arg(__FUNCTION__)
+//            .arg((uint64_t)QThread::currentThreadId());
 
-    qDebug() << msg;
+//    qDebug() << msg;
 
         fileread_init();//文件初始化，读取当前已有文件内容//读取失败，对方未开机。如何处理？？更新的读取进度应该和数据库内容一致才行。
         Start_file_watcher();//监视当前有效的路径和最新的文件
@@ -45,12 +48,11 @@ void Thread_FileRead::doWork()
 
 void Thread_FileRead::start()
 {
-    QString msg = QString("%1 -> %2 threadid:[%3]")
-            .arg(__FILE__)
-            .arg(__FUNCTION__)
-            .arg((uint64_t)QThread::currentThreadId());
-    qDebug() << msg;
-
+//    QString msg = QString("%1 -> %2 threadid:[%3]")
+//            .arg(__FILE__)
+//            .arg(__FUNCTION__)
+//            .arg((uint64_t)QThread::currentThreadId());
+//    qDebug() << msg;
     doWork();
 }
 
@@ -66,6 +68,8 @@ void Thread_FileRead::stop()
 
 void Thread_FileRead::fileread_init()//
 {
+//read history
+
 
     #if 1
     for(int i=0;i<FILENUM;i++)
@@ -288,6 +292,7 @@ void Thread_FileRead::fileread_init()//
 //            myfile[i].textStream->pos();//return pos
             myfile[i].textStream->seek(0);
             myfile[i].textStream->readLine();
+
             while(myfile[i].textStream->atEnd() == false)
             {
                  filedata_temp <<myfile[i].textStream->readLine();
@@ -308,7 +313,7 @@ void Thread_FileRead::fileread_init()//
                     prolist =prolist<<filedata_temp.at(myfile[i].filedata.size()+j);
                     emit signalFileS(filedata_temp.at(myfile[i].filedata.size()+j));
                    // emit    signalFilelisttoSql(prolist);//改发给server，不需要给数据库
-                    }
+                  }
                 //取filedata_temp新增部分
                 emit    signalFiletoClient(prolist);//发给客户端
                     myfile[i].filedata =   filedata_temp;
@@ -329,7 +334,6 @@ void Thread_FileRead::fileread_init()//
             m_pTimer->start();
         }
     }
-
 
     //求两个QStringList的区别，结果返回   （旧 ，新）
     QString Thread_FileRead::getQStringListIntersect( QStringList& commonColumns, QStringList& currentColumns)

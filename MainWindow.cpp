@@ -62,7 +62,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_pMoveThread->doWork();
          m_Thread.start();
          #endif
-     #if 1
+     #if 0
          m_pMoveThread2 = new MoveToThreadTest2();
          m_pMoveThread2->moveToThread(&m_Thread2);
          connect(&m_Thread2,&QThread::started,m_pMoveThread2,&MoveToThreadTest2::start);
@@ -94,8 +94,6 @@ void MainWindow::on_pushButton_stop_clicked()
          //通信
          connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
          connect(thread_fileread,&Thread_FileRead::signalFilelisttoSql,thread_mysql,&Thread_MySQL::deallistfromfile);//data list from file to mysql
-
-
      #endif
      #if 0
          //开启TCP客户端线程
@@ -111,6 +109,7 @@ void MainWindow::on_pushButton_stop_clicked()
 //             m_thread_sql.start();
              m_thread_fileread.start();
 //             m_thread_client.start();
+
  }
 
 //关闭线程
