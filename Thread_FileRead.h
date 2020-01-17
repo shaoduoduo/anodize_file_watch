@@ -57,6 +57,7 @@ private:
                                          QStringList& currentColumns);
 
         HistoryLog *hislog;
+        void updateinfo(Fileinfo_Class *,HistoryLog *,int);
 public slots:
              void doWork();
              void start();

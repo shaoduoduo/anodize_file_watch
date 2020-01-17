@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_pTimer = new QTimer(this);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-    m_pTimer->start(TIMER_TIMEOUT);
+    m_pTimer->start(MAINTIMER_TIMEOUT);
 
     server_Flag = false;
     starthread();
@@ -20,16 +20,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
-
 }
 
 MainWindow::~MainWindow()
 {
         closethread();
-        delete      m_pMoveThread2 ;
-        delete      thread_mysql;
+//        delete      m_pMoveThread2 ;
+//        delete      thread_mysql;
         delete      thread_fileread;
-        delete      thread_client;
+//        delete      thread_client;
         delete      m_pTimer;
         delete      ui;
 
@@ -92,8 +91,8 @@ void MainWindow::on_pushButton_stop_clicked()
 
      #if 1
          //通信
-         connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
-         connect(thread_fileread,&Thread_FileRead::signalFilelisttoSql,thread_mysql,&Thread_MySQL::deallistfromfile);//data list from file to mysql
+//         connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
+//         connect(thread_fileread,&Thread_FileRead::signalFilelisttoSql,thread_mysql,&Thread_MySQL::deallistfromfile);//data list from file to mysql
      #endif
      #if 0
          //开启TCP客户端线程
@@ -126,24 +125,24 @@ void MainWindow::on_pushButton_stop_clicked()
      m_pMoveThread= NULL;
      }
  */
-     if(m_pMoveThread2)
-     {
-         qDebug() << "线程有效，关闭线程2 " ;
-         m_pMoveThread2->stop();
-         m_Thread2.quit();
-         m_Thread2.wait();
-         m_pMoveThread2= nullptr;
-     }
+//     if(m_pMoveThread2)
+//     {
+//         qDebug() << "线程有效，关闭线程2 " ;
+//         m_pMoveThread2->stop();
+//         m_Thread2.quit();
+//         m_Thread2.wait();
+//         m_pMoveThread2= nullptr;
+//     }
 
-     if(thread_mysql)
-     {
-         qDebug() << "线程有效，关闭线程thread_mysql " ;
-         thread_mysql->stop();
-         m_thread_sql.quit();
-         m_thread_sql.wait();
+//     if(thread_mysql)
+//     {
+//         qDebug() << "线程有效，关闭线程thread_mysql " ;
+//         thread_mysql->stop();
+//         m_thread_sql.quit();
+//         m_thread_sql.wait();
 
-         thread_mysql= nullptr;
-     }
+//         thread_mysql= nullptr;
+//     }
 
      if(thread_fileread)
      {
@@ -155,15 +154,15 @@ void MainWindow::on_pushButton_stop_clicked()
          thread_fileread= nullptr;
      }
 
-     if(thread_client)
-     {
-         qDebug() << "线程有效，关闭线程thread_client " ;
-         thread_client->stop();
-         m_thread_client.quit();
-         m_thread_client.wait();
+//     if(thread_client)
+//     {
+//         qDebug() << "线程有效，关闭线程thread_client " ;
+//         thread_client->stop();
+//         m_thread_client.quit();
+//         m_thread_client.wait();
 
-         thread_client= nullptr;
-     }
+//         thread_client= nullptr;
+//     }
  }
 
 

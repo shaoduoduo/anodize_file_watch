@@ -7,13 +7,17 @@ HistoryLog::HistoryLog(const QString path)
 //    path = "./his.json";
     qDebug()<<path;
     globalpath =path;
-    openjson(globalpath);
+
+
+    openjson(globalpath);//获取json文件对象
+
 //初始化，如果没有文件，需要检查，并输入默认参数
+/*
+ * 后续应该添加默认参数，并保存
+ *
+*/
 
 
-    qDebug()<<getfilename("alarm")<< getfilename("alarm").isEmpty();
-    qDebug()<<getfileline("alarm");
-    qDebug()<<getfileindex("alarm");
 }
 
 
@@ -31,11 +35,14 @@ bool HistoryLog::trigsavejson(void)
 bool HistoryLog::openjson(QString path)
 {
     //打开文件
+
+        isok=false;
         QFile file(path);
         isok=file.open(QIODevice::ReadWrite);
         qDebug() <<"文件打开结果为"<<isok;
         if (isok==false)
             qDebug() <<"文件错误"<<isok;
+
         QByteArray data=file.readAll();
         file.close();
 
@@ -44,10 +51,10 @@ bool HistoryLog::openjson(QString path)
         globaldoc=QJsonDocument::fromJson(data,&parseJsonErr);
         globaldoc=QJsonDocument::fromJson(data);
         //判断是否对象
-
         if(!(parseJsonErr.error == QJsonParseError::NoError))
          {
              qDebug()<<("解析json文件错误！")<<parseJsonErr.error;
+             isok = false;
              return false;
          }
 
@@ -55,15 +62,28 @@ bool HistoryLog::openjson(QString path)
         {
             //把json文档转换为json对象
             globalobj=globaldoc.object();
+            isok=true;
             return true;
 //            QJsonObject re = getjson("alarm");
 //            qDebug()<<re<<"isempty"<<re.isEmpty();
         }
         else {
             qDebug()<<"不是json文件";
-
         }
-        return false;
+
+//        for (int n =0;n<this->keylist.size();n++)
+//        {
+//            QString k = this->keylist[n];
+//            if (this->getfileflag(k)==false)
+//            {
+//                this->setfileflag(k,true);
+//                this->setfileline(k,0);
+//                this->setfileindex(k,0);
+//            }
+//        }
+
+
+        return isok;
 }
 
 bool HistoryLog::savejson(QString path)
@@ -75,10 +95,11 @@ bool HistoryLog::savejson(QString path)
    QByteArray data=doc.toJson();
    QFile file(path);
    file.open(QIODevice::WriteOnly);
-   qint64 lines = file.write(data);
-   qDebug()<<lines<<"actually";
+   file.write(data);
+//   qint64 lines = file.write(data);
+//   qDebug()<<lines<<"file.write bytes actually";
    file.close();
-   return lines;
+   return true;
 }
 QJsonObject HistoryLog::getjson(QString svalue)
 {
@@ -89,7 +110,7 @@ QJsonObject HistoryLog::getjson(QString svalue)
      {
         subobj = globalobj.value(svalue).toObject();
      }
-                    return subobj;
+    return subobj;
 //
 }
 
@@ -108,13 +129,23 @@ int HistoryLog::getfileline(QString key)
 }
 void HistoryLog::setfilename(QString key ,QString value)
 {
-    getjson(key).value("filename")= value;
+//    getjson(key).value("filename")= value;
+//    getjson(key).insert("filename",QJsonValue(value));
+//    subObj.insert(secondFlag,jsonvalue);
+
+    QJsonObject obj=  getjson(key);
+    obj.insert("filename",QJsonValue(value));
+    globalobj.insert(key,QJsonValue(obj));
 
 }
 void HistoryLog::setfileline(QString key,int line)
 {
-    getjson(key).value("lines")= line;
+//    getjson(key).value("lines")= line;
+//    getjson(key).insert("lines",QJsonValue(line));
 
+    QJsonObject obj=  getjson(key);
+    obj.insert("lines",QJsonValue(line));
+    globalobj.insert(key,QJsonValue(obj));
 }
 
 bool HistoryLog::getfileflag(QString key)
@@ -124,7 +155,12 @@ bool HistoryLog::getfileflag(QString key)
 }
 void HistoryLog::setfileflag(QString key,bool flag)
 {
-        getjson(key).value("isok")=flag;
+//        getjson(key).value("isok")=flag;
+//        getjson(key).insert("isok",QJsonValue(flag));
+
+        QJsonObject obj=  getjson(key);
+        obj.insert("isok",QJsonValue(flag));
+        globalobj.insert(key,QJsonValue(obj));
 }
 
 
@@ -134,7 +170,11 @@ int HistoryLog::getfileindex(QString key)
 }
 void HistoryLog::setfileindex(QString key,int index)
 {
-    getjson(key).value("index")=index;
+
+    QJsonObject obj=  getjson(key);
+    obj.insert("index",QJsonValue(index));
+    globalobj.insert(key,QJsonValue(obj));
+
 }
 
 

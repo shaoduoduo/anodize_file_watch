@@ -25,21 +25,24 @@ public:
     int getfileline(QString key);
 
     void setfilename(QString key,QString value);
-    void setfileline(QString key,int line);
+    void setfileline(QString key,int line);//读取的第几行，从1开始
 
     bool getfileflag(QString key);
     void setfileflag(QString key,bool flag);
 
-    int getfileindex(QString key);
+    int getfileindex(QString key);//从1开始
     void setfileindex(QString key,int index);
 
     QJsonObject::iterator insertsubkey(QString key,QString subkey,QString value);
     QJsonObject::iterator insertkey(QString key,QJsonObject obj);
 
-
+    const QStringList keylist={"alarm","anod1","anod2","anod3","TC1","TC2","TEMP"};
     bool isok;
-    QJsonObject getjson(QString svalue);
     QJsonObject globalobj;
+private:
+
+    QJsonObject getjson(QString svalue);
+
     QJsonDocument globaldoc;
     QString globalpath;
 

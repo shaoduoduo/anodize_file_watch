@@ -11,7 +11,7 @@
 #include  "protocol/protocol.h"
 
 
-#define TIMER_TIMEOUT   (0.5*1000)
+#define CLIENTTIMER_TIMEOUT   (5*1000)
 
 
 
@@ -34,12 +34,12 @@ private:
             QTcpSocket  *tcpSocket;
 
 signals:
-        signalClientlisttomain(QStringList s);
+        void signalClientlisttomain(QStringList s);
 
-        signalEnter();
-        signalDiscon();
+        void signalEnter();
+        void signalDiscon();
 
-        signalSend(QString str);
+        void signalSend(QString str);
 public slots:
              void doWork();
              void start();
