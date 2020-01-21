@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_pTimer = new QTimer(this);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-    m_pTimer->start(TIMER_TIMEOUT);
+    m_pTimer->start(MAINTIMER_TIMEOUT);
 
     server_Flag = false;
     starthread();
@@ -21,15 +21,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
 
+//    m_rabbitClient.setServerParam ("127.0.0.1",5672);
+//    m_rabbitClient.setRabbitClientParam("22",{"11","qwe"});
+//    m_rabbitClient.start();
+
+
+
 }
 
 MainWindow::~MainWindow()
 {
         closethread();
-        delete      m_pMoveThread2 ;
-        delete      thread_mysql;
+//        delete      m_pMoveThread2 ;
+//        delete      thread_mysql;
         delete      thread_fileread;
-        delete      thread_client;
+//        delete      thread_client;
         delete      m_pTimer;
         delete      ui;
 
@@ -41,10 +47,11 @@ MainWindow::~MainWindow()
     }
 
 
-//停止线程
+//
 void MainWindow::on_pushButton_stop_clicked()
 {
      //   closethread();
+
 }
 
 //启动线程
@@ -62,7 +69,7 @@ void MainWindow::on_pushButton_stop_clicked()
          m_pMoveThread->doWork();
          m_Thread.start();
          #endif
-     #if 1
+     #if 0
          m_pMoveThread2 = new MoveToThreadTest2();
          m_pMoveThread2->moveToThread(&m_Thread2);
          connect(&m_Thread2,&QThread::started,m_pMoveThread2,&MoveToThreadTest2::start);
@@ -92,10 +99,8 @@ void MainWindow::on_pushButton_stop_clicked()
 
      #if 1
          //通信
-         connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
-         connect(thread_fileread,&Thread_FileRead::signalFilelisttoSql,thread_mysql,&Thread_MySQL::deallistfromfile);//data list from file to mysql
-
-
+//         connect(this,&MainWindow::signalsendtofile,thread_fileread,&Thread_FileRead::dealmesfrommain);//,Qt::DirectConnection);
+//         connect(thread_fileread,&Thread_FileRead::signalFilelisttoSql,thread_mysql,&Thread_MySQL::deallistfromfile);//data list from file to mysql
      #endif
      #if 0
          //开启TCP客户端线程
@@ -111,6 +116,8 @@ void MainWindow::on_pushButton_stop_clicked()
 //             m_thread_sql.start();
              m_thread_fileread.start();
 //             m_thread_client.start();
+
+
  }
 
 //关闭线程
@@ -127,24 +134,24 @@ void MainWindow::on_pushButton_stop_clicked()
      m_pMoveThread= NULL;
      }
  */
-     if(m_pMoveThread2)
-     {
-         qDebug() << "线程有效，关闭线程2 " ;
-         m_pMoveThread2->stop();
-         m_Thread2.quit();
-         m_Thread2.wait();
-         m_pMoveThread2= nullptr;
-     }
+//     if(m_pMoveThread2)
+//     {
+//         qDebug() << "线程有效，关闭线程2 " ;
+//         m_pMoveThread2->stop();
+//         m_Thread2.quit();
+//         m_Thread2.wait();
+//         m_pMoveThread2= nullptr;
+//     }
 
-     if(thread_mysql)
-     {
-         qDebug() << "线程有效，关闭线程thread_mysql " ;
-         thread_mysql->stop();
-         m_thread_sql.quit();
-         m_thread_sql.wait();
+//     if(thread_mysql)
+//     {
+//         qDebug() << "线程有效，关闭线程thread_mysql " ;
+//         thread_mysql->stop();
+//         m_thread_sql.quit();
+//         m_thread_sql.wait();
 
-         thread_mysql= nullptr;
-     }
+//         thread_mysql= nullptr;
+//     }
 
      if(thread_fileread)
      {
@@ -156,15 +163,15 @@ void MainWindow::on_pushButton_stop_clicked()
          thread_fileread= nullptr;
      }
 
-     if(thread_client)
-     {
-         qDebug() << "线程有效，关闭线程thread_client " ;
-         thread_client->stop();
-         m_thread_client.quit();
-         m_thread_client.wait();
+//     if(thread_client)
+//     {
+//         qDebug() << "线程有效，关闭线程thread_client " ;
+//         thread_client->stop();
+//         m_thread_client.quit();
+//         m_thread_client.wait();
 
-         thread_client= nullptr;
-     }
+//         thread_client= nullptr;
+//     }
  }
 
 
@@ -237,6 +244,10 @@ void MainWindow::on_pushButton_stop_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     //ui->stackedWidget->setCurrentIndex(3);
+
+
+
+
 }
 
 void MainWindow::on_pushButton_connect_clicked()

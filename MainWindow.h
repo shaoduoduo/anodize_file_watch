@@ -10,13 +10,14 @@
 #include    <QProcess>
 #include    "Thread_Client.h"
 
+
 class QProcess;
 
 
 namespace Ui {
 class MainWindow;
 }
-#define TIMER_TIMEOUT   (5*1000)
+#define MAINTIMER_TIMEOUT   (5*1000)
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -65,12 +66,14 @@ private:
 
     QTimer *m_pTimer;//定时器
     bool server_Flag;
+
+
 signals:
 
 
-        signalsendtofile(QString s);
-        signalsendtoMysql(QString s);
-        signalsendtoclient(QStringList s);
+        void signalsendtofile(QString s);
+        void signalsendtoMysql(QString s);
+        void signalsendtoclient(QStringList s);
 };
 
 #endif // MAINWINDOW_H
