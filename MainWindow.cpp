@@ -20,6 +20,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
+
+//    m_rabbitClient.setServerParam ("127.0.0.1",5672);
+//    m_rabbitClient.setRabbitClientParam("22",{"11","qwe"});
+//    m_rabbitClient.start();
+
+
+
 }
 
 MainWindow::~MainWindow()
@@ -40,10 +47,11 @@ MainWindow::~MainWindow()
     }
 
 
-//停止线程
+//
 void MainWindow::on_pushButton_stop_clicked()
 {
      //   closethread();
+
 }
 
 //启动线程
@@ -108,6 +116,7 @@ void MainWindow::on_pushButton_stop_clicked()
 //             m_thread_sql.start();
              m_thread_fileread.start();
 //             m_thread_client.start();
+
 
  }
 
@@ -235,6 +244,10 @@ void MainWindow::on_pushButton_stop_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     //ui->stackedWidget->setCurrentIndex(3);
+
+
+
+
 }
 
 void MainWindow::on_pushButton_connect_clicked()

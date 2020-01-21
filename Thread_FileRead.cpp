@@ -7,8 +7,6 @@
 //        hislog->setfileindex(key,99);
         hislog->isok = true;
 //        hislog->isok = false;
-
-
     }
 
     Thread_FileRead::~Thread_FileRead()
@@ -34,6 +32,10 @@
             m_pTimer = new QTimer(this);
             connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
             m_pTimer->start(TIMER_TIMEOUT);
+
+            m_rabbitClient =  new QRabbitMQ();
+
+
     }
 
     void Thread_FileRead::start()
@@ -64,6 +66,7 @@
             取消更新部分，统一使用更新函数updateinfo,调用之前，更新myfile信息，传入hislog，根据记录更新读取的信息
             ****************/
         }
+
     }
 
 
@@ -334,4 +337,5 @@
             m_pTimer->start();
         }
         hislog->trigsavejson();//定时保存记录
+//        m_rabbitClient->sendMsg("bbb");
     }

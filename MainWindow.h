@@ -10,6 +10,7 @@
 #include    <QProcess>
 #include    "Thread_Client.h"
 
+
 class QProcess;
 
 
@@ -65,6 +66,8 @@ private:
 
     QTimer *m_pTimer;//定时器
     bool server_Flag;
+
+
 signals:
 
 

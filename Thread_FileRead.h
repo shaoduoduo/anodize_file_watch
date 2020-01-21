@@ -21,6 +21,8 @@
 #include    <protocol/protocol_anodizing.h>
 #include  "protocol/protocol.h"
 #include "hislog/HistoryLog.h"
+#include  "rabbitmq/QRabbitMQ.h"
+
 
 #define TIMER_TIMEOUT   (5*1000)
 class QTimer;
@@ -58,6 +60,11 @@ private:
 
         HistoryLog *hislog;
         void updateinfo(Fileinfo_Class *,HistoryLog *,int);
+
+        QRabbitMQ *m_rabbitClient;
+
+
+
 public slots:
              void doWork();
              void start();

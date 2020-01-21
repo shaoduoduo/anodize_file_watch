@@ -23,6 +23,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    configlog/logfile.cpp \
+    configlog/readconfig.cpp \
     hislog/HistoryLog.cpp \
         main.cpp \
         MainWindow.cpp \
@@ -33,7 +35,8 @@ SOURCES += \
     Fileinfo_Class.cpp \
     protocol/protocol_anodizing.cpp \
     protocol/protocol.cpp \
-    Thread_Client.cpp
+    Thread_Client.cpp \
+    rabbitmq/QRabbitMQ.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -46,7 +49,8 @@ HEADERS += \
     protocol/protocol_list.h \
     protocol/protocol_anodizing.h \
     protocol/protocol.h \
-    Thread_Client.h
+    Thread_Client.h \
+    rabbitmq/QRabbitMQ.h
 
 FORMS += \
         MainWindow.ui
@@ -56,6 +60,22 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+
+
+#LIBS += -L$$PWD/../bin/ -lqamqp
+#INCLUDEPATH += ./QAMQP
+
+#INCLUDEPATH += $$PWD/../QAMQP
+####头文件包含路径
+#DEPENDPATH += $$PWD/../QAMQP
+
+
 DISTFILES += \
     说明.txt \
     阳极氧化端程序.txt
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/bin/ -lqamqp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/bin/ -lqamqpd
+
+INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/QAMQP
+DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/QAMQP
