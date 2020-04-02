@@ -20,11 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->textEdit_port->setText("8888");
     ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
-
-//    m_rabbitClient.setServerParam ("127.0.0.1",5672);
-//    m_rabbitClient.setRabbitClientParam("22",{"11","qwe"});
-//    m_rabbitClient.start();
-
+//    qInstallMessageHandler(myMessageOutput);//会将qudebug输出至文件，暂时不打开
 
 
 }

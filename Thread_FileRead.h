@@ -9,7 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <QByteArray>
-
+#include <QDateTime>
 #include    <QDebug>
 #include    <QThread>
 #include    <QDataStream>
@@ -62,7 +62,7 @@ private:
         void updateinfo(Fileinfo_Class *,HistoryLog *,int);
 
         QRabbitMQ *m_rabbitClient;
-
+        void packJson(QString ,PRO_INDEX_ANODIZE);
 
 
 public slots:

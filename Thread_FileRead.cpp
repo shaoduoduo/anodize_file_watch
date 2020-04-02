@@ -7,6 +7,8 @@
 //        hislog->setfileindex(key,99);
         hislog->isok = true;
 //        hislog->isok = false;
+
+
     }
 
     Thread_FileRead::~Thread_FileRead()
@@ -258,8 +260,10 @@
                         ptrfile->filedata <<ptrfile->textStream->readLine();//reload existing data dont need to send
                     }
                     if(ptrfile->filedata.size()>=lines){
-                        for(int n=lines;n<ptrfile->filedata.size();n++)
+                        for(int n=lines;n<ptrfile->filedata.size();n++){
                             emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容
+                            packJson(ptrfile->filedata.at(n),n);
+                        }
                     }
                 }
 
@@ -297,8 +301,10 @@
                             }
                             int n=0;
 
-                                for( n=0;n<ptrfile->filedata.size();n++)
+                                for( n=0;n<ptrfile->filedata.size();n++){
                                     emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容
+                                    packJson(ptrfile->filedata.at(n),n);
+                                }
                                 qDebug()<<"fileline  已经更新到"<<n<<key<<j;
 
 //                                lines =(n)?(n-1):n;
@@ -337,5 +343,43 @@
             m_pTimer->start();
         }
         hislog->trigsavejson();//定时保存记录
-//        m_rabbitClient->sendMsg("bbb");
+
     }
+
+    void Thread_FileRead::packJson(QString datastr, PRO_INDEX_ANODIZE item)
+    {
+        if (datastr.isEmpty())
+            return;
+        switch(item)
+        {
+        case ALARM:
+            QStringList paralist = datastr.split('\t');
+            if (paralist.size()!=4)
+                return;//无效数据
+            QJsonObject obj;
+            obj.insert("time",paralist.at(0));
+            obj.insert("date",paralist.at(1));
+            obj.insert("status",paralist.at(2));
+            obj.insert("msg",paralist.at(3));
+            QJsonDocument doc(obj);
+            QByteArray databyte= doc.toJson();
+            QString datastr(databyte);
+            m_rabbitClient->sendMsg(datastr);
+        break;
+        case ANOD1:
+            break;
+        case ANOD2:
+            break;
+        case ANOD3:
+            break;
+        case TCDATA1:
+            break;
+        case TCDATA2:
+            break;
+        case TEMPHIS:
+            break;
+        }
+
+    }
+
+

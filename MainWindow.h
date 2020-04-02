@@ -9,7 +9,7 @@
 #include    <QFileSystemWatcher>
 #include    <QProcess>
 #include    "Thread_Client.h"
-
+#include  "configlog/logfile.h"
 
 class QProcess;
 

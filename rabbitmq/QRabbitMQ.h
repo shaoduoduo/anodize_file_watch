@@ -9,6 +9,7 @@
 #include "qamqpclient.h"
 #include "qamqpexchange.h"
 #include "qamqpqueue.h"
+#include "configlog/readconfig.h"
 
 class QRabbitMQ : public QObject
 {
@@ -46,6 +47,13 @@ private:
 
     QString m_exchangerName;
     QAmqpExchange *globalexchanger;
+
+
+    QString ip;
+    QString usrname;
+    QString pwd;
+    QString virtualhost;
+    QString queues;
 
 };
 
