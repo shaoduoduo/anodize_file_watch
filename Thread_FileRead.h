@@ -62,7 +62,7 @@ private:
         void updateinfo(Fileinfo_Class *,HistoryLog *,int);
 
         QRabbitMQ *m_rabbitClient;
-        void packJson(QString ,PRO_INDEX_ANODIZE);
+        void packJson(QString ,int);
 
 
 public slots:

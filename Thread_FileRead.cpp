@@ -262,7 +262,7 @@
                     if(ptrfile->filedata.size()>=lines){
                         for(int n=lines;n<ptrfile->filedata.size();n++){
                             emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容
-                            packJson(ptrfile->filedata.at(n),n);
+                            packJson(ptrfile->filedata.at(n),i);
                         }
                     }
                 }
@@ -302,8 +302,8 @@
                             int n=0;
 
                                 for( n=0;n<ptrfile->filedata.size();n++){
-                                    emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容
-                                    packJson(ptrfile->filedata.at(n),n);
+                                    emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容，送到主界面显示
+                                    packJson(ptrfile->filedata.at(n),i);
                                 }
                                 qDebug()<<"fileline  已经更新到"<<n<<key<<j;
 
@@ -346,38 +346,43 @@
 
     }
 
-    void Thread_FileRead::packJson(QString datastr, PRO_INDEX_ANODIZE item)
+    void Thread_FileRead::packJson(QString datastr, int item)
     {
+        QStringList paralist;
+        QJsonObject obj;
         if (datastr.isEmpty())
             return;
         switch(item)
         {
-        case ALARM:
-            QStringList paralist = datastr.split('\t');
-            if (paralist.size()!=4)
-                return;//无效数据
-            QJsonObject obj;
-            obj.insert("time",paralist.at(0));
-            obj.insert("date",paralist.at(1));
-            obj.insert("status",paralist.at(2));
-            obj.insert("msg",paralist.at(3));
-            QJsonDocument doc(obj);
-            QByteArray databyte= doc.toJson();
-            QString datastr(databyte);
-            m_rabbitClient->sendMsg(datastr);
-        break;
-        case ANOD1:
+            case ALARM:
+            {
+                paralist = datastr.split('\t');
+                if (paralist.size()!=4)
+                    return;//无效数据
+
+                obj.insert("time",paralist.at(0));
+                obj.insert("date",paralist.at(1));
+                obj.insert("status",paralist.at(2));
+                obj.insert("msg",paralist.at(3));
+                QJsonDocument doc(obj);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+            }
+
             break;
-        case ANOD2:
-            break;
-        case ANOD3:
-            break;
-        case TCDATA1:
-            break;
-        case TCDATA2:
-            break;
-        case TEMPHIS:
-            break;
+            case ANOD1:
+                break;
+            case ANOD2:
+                break;
+            case ANOD3:
+                break;
+            case TCDATA1:
+                break;
+            case TCDATA2:
+                break;
+            case TEMPHIS:
+                break;
         }
 
     }
