@@ -6,21 +6,30 @@ QRabbitMQ::QRabbitMQ(QObject *parent) :
     QObject(parent),
     globalexchanger(nullptr)
 {
-    m_exchangerName = "tempex";
+
     m_serverPort = 0;
 
     /*
     */
+    Readconfig *m_cfg = new Readconfig("../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/config.ini");
 
-    m_client.setHost("127.0.0.1");
-    m_client.setUsername("python_c");
-    m_client.setPassword("python_c");
-    m_client.setVirtualHost("anodize");
+    ip=m_cfg->Get("rabbit_mq","ip","127.0.0.1").toString();
+    usrname = m_cfg->Get("rabbit_mq","usrname","anodize_qt").toString();
+    pwd=m_cfg->Get("rabbit_mq","pwd","anodize_qt").toString();
+    virtualhost = m_cfg->Get("rabbit_mq","virtualhost","anodize").toString();
+    queues = m_cfg->Get("rabbit_mq","queue","anod_queue").toString();
+
+    delete m_cfg;
+//    qDebug()<<"queues ---->>>"<<queues;
+
+
+
+    m_client.setHost(ip);
+    m_client.setUsername(usrname);
+    m_client.setPassword(pwd);
+    m_client.setVirtualHost(virtualhost);
     connect(&m_client, SIGNAL(connected()), this, SLOT(clientConnected()));
     m_client.connectToHost();
-
-
-
 }
 
 void QRabbitMQ::start()
@@ -36,10 +45,14 @@ void QRabbitMQ::start()
 }
 void QRabbitMQ::clientConnected()
 {
-    QAmqpQueue *queue = m_client.createQueue("hello");
+    QAmqpQueue *queue = m_client.createQueue(queues);
     connect(queue, SIGNAL(declared()), this, SLOT(queueDeclared()));
-    queue->declare();
+    queue->declare(QAmqpQueue::NoOptions);//这里需要加QAmqpQueue::NoOptions，因为默认是自动删除，可能会被删掉
     qDebug() << "RabbitMQ connect to server ok";
+
+//    Durable = 0x02,
+//    NoOptions = 0x00,
+//    AutoDelete = 0x08,
 }
 
 void QRabbitMQ::exchangeDeclared()
@@ -51,16 +64,13 @@ void QRabbitMQ::queueDeclared()
 {
     QAmqpQueue *queue = qobject_cast<QAmqpQueue*>(sender());
     if (!queue)
+        {
+        qDebug() << "mq queue 无效";
         return;
+    }
+
     QAmqpExchange *defaultExchange = m_client.createExchange();
-
     globalexchanger = defaultExchange;
-//    defaultExchange->publish("1122", "hello");
-//    defaultExchange->remove();
-
-//    this->sendMsg("a");
-
-//    this->sendMsg("b");
 }
 
 void QRabbitMQ::messageReceived()
@@ -76,28 +86,13 @@ void QRabbitMQ::messageReceived()
 
 void QRabbitMQ::sendMsg(const QString &msg)
 {
-
-//    QAmqpQueue *queue = qobject_cast<QAmqpQueue*>(sender());
-//    if (!queue)
-//        return;
-
-
-//    QAmqpExchange *defaultExchange = m_client.createExchange();
-//    defaultExchange->publish(msg, "hello");
-
-//    defaultExchange->close();
-//    defaultExchange->remove();
-
     if(!globalexchanger)
-        return;
-    globalexchanger->publish(msg, "hello");
+    {
+    qDebug() << "mq globalexchanger 无效";
+    return;
+}
+    globalexchanger->publish(msg, queues);
     qDebug() << " sendMsg() Sent "<<msg;
-
-
-//    QAmqpExchange *exchange = m_client.createExchange(m_exchangerName);
-
-//    exchange->publish(msg, "hello");
-
 }
 
 void QRabbitMQ::setServerParam(const QString &ip, int port)

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <QByteArray>
-
+#include <QDateTime>
 #include    <QDebug>
 #include    <QThread>
 #include    <QDataStream>
@@ -22,7 +22,7 @@
 #include  "protocol/protocol.h"
 #include "hislog/HistoryLog.h"
 #include  "rabbitmq/QRabbitMQ.h"
-
+#include  "configlog/readconfig.h"
 
 #define TIMER_TIMEOUT   (5*1000)
 class QTimer;
@@ -37,9 +37,11 @@ void    fileread_init_textstream();
 signals:
         void signalFileS(QString s);
         void signalFileStr(QStringList s);
+        void signalFiledebug(QString s);
         void signalFiletoClient(QStringList s);
         void signalFileStrtoSql(QString s);
         void signalFilelisttoSql(QStringList s);
+
 private:
 //读文件相关
 
@@ -51,7 +53,7 @@ private:
         const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
                                     <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TC_Data/"<<"/TEMP-Historic/");
        // const   QString defaultpath="//10.10.10.98/anodize_data";
-        QString defaultpath="C:/Users/gyshao/Desktop/data";
+        QString defaultpath;
 
         QTimer *m_pTimer;//定时器
 
@@ -62,8 +64,8 @@ private:
         void updateinfo(Fileinfo_Class *,HistoryLog *,int);
 
         QRabbitMQ *m_rabbitClient;
-
-
+        void packJson(QString ,int);
+        Readconfig *con_p;
 
 public slots:
              void doWork();
@@ -72,7 +74,7 @@ public slots:
         //文件监视器 处理槽函数
             void    dirChanged(QString path);
             void    fileChanged(QString path);
-            void    dealmesfrommain(QString s);
+            void    dealmesfrommain(QString );
 
             void    handleTimeout();  //定时器超时处理函数
 

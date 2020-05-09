@@ -15,6 +15,8 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+
+DEFINES += QT_MESSAGELOGCONTEXT
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -45,6 +47,8 @@ HEADERS += \
     Thread_MySQL.h \
     Thread_FileRead.h \
     Fileinfo_Class.h \
+    configlog/logfile.h \
+    configlog/readconfig.h \
     hislog/HistoryLog.h \
     protocol/protocol_list.h \
     protocol/protocol_anodizing.h \
@@ -79,3 +83,11 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-untitled1-Desk
 
 INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/QAMQP
 DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/QAMQP
+
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/bin/ -lqamqp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/bin/ -lqamqpd
+
+INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/QAMQP
+DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/QAMQP
