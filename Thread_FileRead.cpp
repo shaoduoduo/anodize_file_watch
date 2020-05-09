@@ -11,7 +11,12 @@
 //改为读取配置文件内容
         con_p = new Readconfig();
         defaultpath = con_p->Get_and_Default("FileWatcher","Defaultpath","C:/Users/gyshao/Desktop/data").toString();
-        qDebug()<<defaultpath;
+//        qDebug()<<defaultpath;
+
+
+
+
+
     }
 
     Thread_FileRead::~Thread_FileRead()
@@ -34,13 +39,16 @@
 
     void Thread_FileRead::doWork()
     {
+
+            m_rabbitClient =  new QRabbitMQ();
+//            while(!m_rabbitClient->globalexchanger){}
             fileread_init();//文件初始化，读取当前已有文件内容//读取失败，对方未开机。如何处理？？更新的读取进度应该和数据库内容一致才行。
             Start_file_watcher();//监视当前有效的路径和最新的文件
             m_pTimer = new QTimer(this);
             connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
             m_pTimer->start(TIMER_TIMEOUT);
 
-            m_rabbitClient =  new QRabbitMQ();
+
 
 
     }
@@ -126,16 +134,33 @@
                    bool isOK= fswatcher->addPath(myfile[i].fileDirPath);
 
                     if(true==isOK)
-                        qDebug()<<myfile[i].fileDirPath<<"路径监视成功";
+                    {
+                        QString str = myfile[i].fileDirPath+"路径监视成功";
+                        qDebug()<<str;
+                        emit  signalFiledebug(str);
+                    }
+
                     else
-                        qDebug()<<myfile[i].fileDirPath<<"路径监视添加失败";
+                    {
+                        QString str = myfile[i].fileDirPath+"路径监视添加失败";
+                        qDebug()<<str;
+                        emit  signalFiledebug(str);
+                    }
                     if(true == myfile[i].isOK)
                    {
                         isOK= fswatcher->addPath(myfile[i].srcDirPath);
                      if(true==isOK)
-                         qDebug()<<myfile[i].srcDirPath<<"文件监视成功";
+                     {
+                         QString str = myfile[i].srcDirPath+"路径监视成功";
+                         qDebug()<<str;
+                         emit  signalFiledebug(str);
+                     }
                      else
-                         qDebug()<<myfile[i].srcDirPath<<"文件监视添加失败";
+                     {
+                         QString str = myfile[i].srcDirPath+"路径监视成功";
+                         qDebug()<<str;
+                         emit  signalFiledebug(str);
+                     }
                     }
                }
                 connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
@@ -145,12 +170,19 @@
     void    Thread_FileRead::dealmesfrommain(QString s)
     {
         qDebug()<<s;
+        m_rabbitClient->sendMsg(s);
+
     }
 
     void    Thread_FileRead::dirChanged(QString path)
     {
         int i =0;
-        qDebug()<<path<<"-------dir修改";
+
+        {
+            QString str = path+"-------dir修改";
+            qDebug()<<str;
+            emit  signalFiledebug(str);
+        }
 //                  有文件被修改
 //                  1、文件数量变更
 //                  2、文件被修改
@@ -176,13 +208,28 @@
                     bool isOK= fswatcher->removePath(myfile[i].srcDirPath);
                      if(true==isOK)
                         {
-                            qDebug()<<myfile[i].srcDirPath<<"旧文件移除监视成功";
+//                            qDebug()<<myfile[i].srcDirPath<<"旧文件移除监视成功";
+
+                            {
+                                QString str = myfile[i].srcDirPath+"旧文件移除监视成功";
+                                qDebug()<<str;
+                                emit  signalFiledebug(str);
+                            }
+
+
                             myfile[i].srcDirPath =path+newsrcDirPath;
                             myfile[i].filelist = newfilelist;
                             isOK= fswatcher->addPath(myfile[i].srcDirPath);
                             if(true==isOK)
                             {
-                                qDebug()<<newsrcDirPath<<"更新文件监视成功";
+//                                qDebug()<<newsrcDirPath<<"更新文件监视成功";
+
+                                {
+                                    QString str = newsrcDirPath+"更新文件监视成功";
+                                    qDebug()<<str;
+                                    emit  signalFiledebug(str);
+                                }
+
 /********************************
 取消更新部分，统一使用更新函数
 ********************************/
@@ -215,7 +262,13 @@
     {
 
             if (his->isok==false){
-                qDebug()<<"文件读取记录初始化错误";
+//                qDebug()<<"文件读取记录初始化错误";
+                {
+                    QString str ="文件读取记录初始化错误";
+                    qDebug()<<str;
+                    emit  signalFiledebug(str);
+                }
+
                 return;
             }
             QString key =his->keylist[i];  //key == {"alarm","anod1","anod2","anod3","TC1","TC2","TEMP"};
@@ -240,7 +293,14 @@
                 if(i==TCDATA1||i==TCDATA2)
                 {
                     if(ptrfile->filelist.size()!=2){//if it has two file
-                        qDebug()<<"天车目录出现异常文件,数量不是2";
+//                        qDebug()<<"天车目录出现异常文件,数量不是2";
+                        {
+                            QString str ="天车目录出现异常文件,数量不是2";
+                            qDebug()<<str;
+                            emit  signalFiledebug(str);
+                        }
+
+
                         return;
                     }
                         if(i==TCDATA1)//针对天车数据，专门进行特殊处理
@@ -253,7 +313,13 @@
                 ptrfile->isOK = ptrfile->pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
                 if(true == ptrfile->isOK)
                 {
-                    qDebug()<<"打开文件成功";
+//                    qDebug()<<"打开文件成功";
+                    {
+                        QString str ="打开文件成功"+ptrfile->srcDirPath;
+                        qDebug()<<str;
+                        emit  signalFiledebug(str);
+                    }
+
                     ptrfile->textStream = new QTextStream(ptrfile->pfile);
                     ptrfile->textStream->setCodec("GB2312");
                     ptrfile->textStream->readLine();//drop first line
@@ -276,8 +342,13 @@
 //                index = index+1;
                 his->setfileline(key,lines);
 //                his->setfileindex(key,index);
-                qDebug()<<"已经更新到"<<lines<<index;
+//                qDebug()<<"已经更新到"<<lines<<index;
 
+                {
+                    QString str ="已经更新到"+QString("第%1个文件,第%2行").arg(index).arg(lines);
+                    qDebug()<<str;
+                    emit  signalFiledebug(str);
+                }
                 //判断当前列表内剩下的文件
                 if(ptrfile->filelist.size()>index+1)
                 {
@@ -291,7 +362,12 @@
                         ptrfile->isOK = ptrfile->pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
                         if(true == ptrfile->isOK)
                         {
-                            qDebug()<<"打开文件成功";
+//                            qDebug()<<"打开文件成功";
+                            {
+                                QString str ="打开文件成功";
+                                qDebug()<<str;
+                                emit  signalFiledebug(str);
+                            }
                             delete ptrfile->textStream;
                             ptrfile->textStream = new QTextStream(ptrfile->pfile);
                             ptrfile->textStream->setCodec("GB2312");
@@ -310,8 +386,12 @@
                                     emit signalFileS(ptrfile->filedata.at(n));//发送当前文件剩下内容，送到主界面显示
                                     packJson(ptrfile->filedata.at(n),i);
                                 }
-                                qDebug()<<"fileline  已经更新到"<<n<<key<<j;
-
+//                                qDebug()<<"fileline  已经更新到"<<n<<key<<j;
+                                {
+                                    QString str ="fileline  已经更新到"+QString("%1数据%2文件 第%2行").arg(key).arg(j).arg(n);
+                                    qDebug()<<str;
+                                    emit  signalFiledebug(str);
+                                }
 //                                lines =(n)?(n-1):n;
                                 lines = ptrfile->filedata.length();
                                 index = j;
@@ -355,6 +435,7 @@
     {
         QStringList paralist;
         QJsonObject obj;
+        QJsonObject ObjF;
         if (datastr.isEmpty())
             return;
         switch(item)
@@ -364,29 +445,179 @@
                 paralist = datastr.split('\t');
                 if (paralist.size()!=4)
                     return;//无效数据
+//                日期	时间	状态	消息
 
-                obj.insert("time",paralist.at(0));
-                obj.insert("date",paralist.at(1));
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
                 obj.insert("status",paralist.at(2));
                 obj.insert("msg",paralist.at(3));
-                QJsonDocument doc(obj);
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
                 QString datastr(databyte);
                 m_rabbitClient->sendMsg(datastr);
+
+//                qDebug()<<ObjF;
             }
 
             break;
             case ANOD1:
+                {
+                paralist = datastr.split('\t');
+                if (paralist.size()!=6)
+                    return;//无效数据
+
+//                Date	Time	电流PV	电压PV	电流SV	电压SV
+
+
+
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("cpv",paralist.at(2));
+                obj.insert("vpv",paralist.at(3));
+                obj.insert("csv",paralist.at(4));
+                obj.insert("vsv",paralist.at(5));
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+
+                }
                 break;
             case ANOD2:
+                {
+                paralist = datastr.split('\t');
+                qDebug()<<"文件列表"<<paralist<<paralist.size();
+
+                if (paralist.size()!=6)
+                    return;//无效数据
+
+        //                Date	Time	电流PV	电压PV	电流SV	电压SV
+
+
+
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("cpv",paralist.at(2));
+                obj.insert("vpv",paralist.at(3));
+                obj.insert("csv",paralist.at(4));
+                obj.insert("vsv",paralist.at(5));
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+
+                }
                 break;
             case ANOD3:
+                {
+                paralist = datastr.split('\t');
+                if (paralist.size()!=6)
+                    return;//无效数据
+
+        //                Date	Time	电流PV	电压PV	电流SV	电压SV
+
+
+
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("cpv",paralist.at(2));
+                obj.insert("vpv",paralist.at(3));
+                obj.insert("csv",paralist.at(4));
+                obj.insert("vsv",paralist.at(5));
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+
+                }
                 break;
             case TCDATA1:
+                {
+                qDebug()<<paralist<<paralist.size();
+                paralist = datastr.split('\t');
+                if (paralist.size()!=6)
+                    return;//无效数据
+//            Date	Time	编号	      条  码	位置	动作
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("num",paralist.at(2));
+                obj.insert("code",paralist.at(3));
+                obj.insert("position",paralist.at(4));
+                obj.insert("action",paralist.at(5));
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+                }
                 break;
             case TCDATA2:
+                {
+                paralist = datastr.split('\t');
+                if (paralist.size()!=6)
+                    return;//无效数据
+        //            Date	Time	编号	      条  码	位置	动作
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("num",paralist.at(2));
+                obj.insert("code",paralist.at(3));
+                obj.insert("position",paralist.at(4));
+                obj.insert("action",paralist.at(5));
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+                }
                 break;
             case TEMPHIS:
+                {
+                    paralist = datastr.split('\t');
+                    if (paralist.size()!=17)
+                        return;//无效数据
+        //           Date	Time	A1	A3	A5	A7	A9	A11	A13	D1	D3	A16	A18	A20	S1	S2	S3
+
+                obj.insert("date",paralist.at(0));
+                obj.insert("time",paralist.at(1));
+                obj.insert("A1",paralist.at(2));
+                obj.insert("A3",paralist.at(3));
+                obj.insert("A5",paralist.at(4));
+                obj.insert("A7",paralist.at(5));
+                obj.insert("A9",paralist.at(6));
+                obj.insert("A11",paralist.at(7));
+                obj.insert("A13",paralist.at(8));
+                obj.insert("D1",paralist.at(9));
+                obj.insert("D3",paralist.at(10));
+                obj.insert("A16",paralist.at(11));
+                obj.insert("A18",paralist.at(12));
+                obj.insert("A20",paralist.at(13));
+                obj.insert("S1",paralist.at(14));
+                obj.insert("S2",paralist.at(15));
+                obj.insert("S3",paralist.at(16));
+
+
+                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("data",obj);
+                QJsonDocument doc(ObjF);
+                QByteArray databyte= doc.toJson();
+                QString datastr(databyte);
+                m_rabbitClient->sendMsg(datastr);
+                }
                 break;
         }
 

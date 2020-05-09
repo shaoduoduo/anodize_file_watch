@@ -16,13 +16,26 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->pushButton_connect->setEnabled(true);
     ui->pushButton_disconnect->setEnabled(false);
-    ui->textEdit_IP->setText("10.10.10.78");
-    ui->textEdit_port->setText("8888");
-    ui->textEdit_name->setText("kube");
+//    ui->textEdit_IP->setText("10.10.10.78");
+//    ui->textEdit_port->setText("8888");
+//    ui->textEdit_name->setText("kube");
     ui->pushButton_start->setEnabled(false);//关闭开始按键
 //    qInstallMessageHandler(myMessageOutput);//会将qudebug输出至文件，暂时不打开
 
-
+    //获得IP
+    QString localHostName = QHostInfo::localHostName();
+    QHostInfo hostInfo =QHostInfo::fromName(localHostName);
+    QList<QHostAddress>listAddress =    hostInfo.addresses();
+    if(listAddress.length()>=2)
+        ui->textBrowser_server->append(QString("本地IP地址为 %1").arg(listAddress.at(1).toString()));
+//    if(!listAddress.isEmpty())
+//    {
+//        qDebug()<<"打印本机IP"<<listAddress<<listAddress.length();
+//        for (int i = 0;i++;i<listAddress.length()) {
+//                ui->textBrowser_server->append(listAddress.at(i).toString());
+//                 ui->textBrowser_server->append(QString("本地IP地址为 %1").arg(listAddress.at(i).toString()));
+//        }
+//    }
 }
 
 MainWindow::~MainWindow()
@@ -92,6 +105,9 @@ void MainWindow::on_pushButton_stop_clicked()
          //connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
          connect(thread_fileread,&Thread_FileRead::signalFileStr,this,&MainWindow::deal_from_fileread);
          connect(thread_fileread,&Thread_FileRead::signalFileS,this,&MainWindow::deals_from_fileread);
+         connect(thread_fileread,&Thread_FileRead::signalFiledebug,this,&MainWindow::dealdebug_from_fileread);
+
+         connect(this,&MainWindow::signalsendtoclient,thread_fileread,&Thread_FileRead::dealmesfrommain);
 
      #if 1
          //通信
@@ -171,59 +187,61 @@ void MainWindow::on_pushButton_stop_clicked()
  }
 
 
- void MainWindow::on_pushButton_start_clicked()
+void MainWindow::on_pushButton_start_clicked()
 {
 //        starthread();//不再由按键启动，改为自动启动线程，按键连接
 
 }
 
-    void MainWindow::deal_from_fileread(QStringList s)
+void MainWindow::deal_from_fileread(QStringList s)
+{
+    for(int i = 0; i< s.size();++i)
     {
-        for(int i = 0; i< s.size();++i)
-        {
-            ui->text_output->append(s.at(i));
-        }
+        ui->text_output->append(s.at(i));
     }
-    void MainWindow::deals_from_fileread(QString s)
-    {
-            ui->text_output->append(s);
-    }
+}
+void MainWindow::deals_from_fileread(QString s)
+{
+        ui->text_output->append(s);
+}
+void MainWindow::dealdebug_from_fileread(QString s)
+{
+        ui->textBrowser_server->append(s);
+}
 
-    void MainWindow::handleTimeout()
-    {
+void MainWindow::handleTimeout()
+{
 //        QString msg = QString("%1 -> %2 threadid:[%3]")
 //                .arg(__FILE__)
 //                .arg(__FUNCTION__)
 //                .arg((int)QThread::currentThreadId());
 //        qDebug() << msg;
 
-        if(m_pTimer->isActive()){
-            m_pTimer->start();
-        }
+    if(m_pTimer->isActive()){
+        m_pTimer->start();
     }
+}
 
-        void MainWindow::deal_from_client(QStringList s)
+void MainWindow::deal_from_client(QStringList s)
         {
             switch (s.at(0).toInt())
             {
             case PRO_CLIENT_IP:
                 //收到本机IP地址
               ui->label_IP->setText(QString("本地IP地址为 %1").arg(s.at(1)));
-
-                // ui->label_IP->setText(s.at(1));
-
-                break;
+              ui->label_IP->setText(s.at(1));
+              break;
 
             case PRO_CLIENT_CONN:
                  ui->text_output->append(s.at(1));
-             break;
+            break;
 
              case PRO_CLIENT_DISCONN:
                  ui->text_output->append(s.at(1));
-              break;
+             break;
              case PRO_CLIENT_RECEIVE:
                 ui->text_output->append(s.at(1));
-              break;
+             break;
 
 
             case PRO_CLIENT_ERROR:
@@ -248,37 +266,38 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_connect_clicked()
 {
-    QStringList s;
-    s<<QString("%1").arg(PRO_MAIN_INFO);
+//    QString s;
+//    s=QString("%1").arg(PRO_MAIN_INFO);
     //ui->textEdit_name->tex
 //    QString str;
-   s<<ui->textEdit_name->toPlainText();
-   s<< ui->textEdit_IP->toPlainText();
+//   s<<ui->textEdit_name->toPlainText();
+//   s<< ui->textEdit_IP->toPlainText();
 
-   s<<ui->textEdit_port->toPlainText();
-    emit    signalsendtoclient(s);
+//   s<<ui->textEdit_port->toPlainText();
+//    emit    signalsendtoclient(s);
 
     ui->pushButton_connect->setEnabled(false);
     ui->pushButton_disconnect->setEnabled(true);
 }
-
-void MainWindow::on_pushButton_send_clicked()
-{
-    QStringList s;
-    s<<QString("%1").arg(PRO_MAIN_SEND);
-
-    s<<ui->textEdit_send->toPlainText();
-    if(false == ui->textEdit_send->toPlainText().isEmpty())
-    emit    signalsendtoclient(s);
-
-}
-
 void MainWindow::on_pushButton_disconnect_clicked()
 {
-    QStringList s;
-    s<<QString("%1").arg(PRO_MAIN_DISCON);
-    emit    signalsendtoclient(s);
+//    QString s;
+//    s=QString("%1").arg(PRO_MAIN_DISCON);
+//    emit    signalsendtoclient(s);
 
     ui->pushButton_connect->setEnabled(true);
     ui->pushButton_disconnect->setEnabled(false);
 }
+//发送按键
+void MainWindow::on_pushButton_send_clicked()
+{
+    QString s;
+//    s<<QString("%1").arg(PRO_MAIN_SEND);
+
+    s = ui->textEdit_send->toPlainText();
+    if(false == ui->textEdit_send->toPlainText().isEmpty())
+        emit    signalsendtoclient(s);
+
+}
+
+

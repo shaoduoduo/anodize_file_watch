@@ -37,9 +37,11 @@ void    fileread_init_textstream();
 signals:
         void signalFileS(QString s);
         void signalFileStr(QStringList s);
+        void signalFiledebug(QString s);
         void signalFiletoClient(QStringList s);
         void signalFileStrtoSql(QString s);
         void signalFilelisttoSql(QStringList s);
+
 private:
 //读文件相关
 
@@ -72,7 +74,7 @@ public slots:
         //文件监视器 处理槽函数
             void    dirChanged(QString path);
             void    fileChanged(QString path);
-            void    dealmesfrommain(QString s);
+            void    dealmesfrommain(QString );
 
             void    handleTimeout();  //定时器超时处理函数
 

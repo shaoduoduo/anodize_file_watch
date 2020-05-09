@@ -10,7 +10,7 @@
 #include    <QProcess>
 #include    "Thread_Client.h"
 #include  "configlog/logfile.h"
-
+#include <QHostInfo>
 class QProcess;
 
 
@@ -36,6 +36,7 @@ private slots:
     void on_pushButton_start_clicked();
     void deal_from_fileread(QStringList s);
     void deals_from_fileread(QString s);
+    void dealdebug_from_fileread(QString s);
     void deal_from_client(QStringList s);
             void    handleTimeout();  //定时器超时处理函数
             void on_pushButton_clicked();
@@ -73,7 +74,7 @@ signals:
 
         void signalsendtofile(QString s);
         void signalsendtoMysql(QString s);
-        void signalsendtoclient(QStringList s);
+        void signalsendtoclient(QString s);
 };
 
 #endif // MAINWINDOW_H
