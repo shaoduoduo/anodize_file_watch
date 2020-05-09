@@ -21,7 +21,7 @@ public:
     void setRabbitClientParam(const QString &routingKey, const QStringList &bindingKeyList);
 
     void sendMsg(const QString &msg);
-
+    QAmqpExchange *globalexchanger;
 signals:
     void msgSig(QString msg);
 
@@ -46,7 +46,7 @@ private:
     int m_serverPort;
 
     QString m_exchangerName;
-    QAmqpExchange *globalexchanger;
+
 
 
     QString ip;

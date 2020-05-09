@@ -14,8 +14,8 @@ QRabbitMQ::QRabbitMQ(QObject *parent) :
     Readconfig *m_cfg = new Readconfig("../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/config.ini");
 
     ip=m_cfg->Get("rabbit_mq","ip","127.0.0.1").toString();
-    usrname = m_cfg->Get("rabbit_mq","usrname","python_c").toString();
-    pwd=m_cfg->Get("rabbit_mq","pwd","python_c").toString();
+    usrname = m_cfg->Get("rabbit_mq","usrname","anodize_qt").toString();
+    pwd=m_cfg->Get("rabbit_mq","pwd","anodize_qt").toString();
     virtualhost = m_cfg->Get("rabbit_mq","virtualhost","anodize").toString();
     queues = m_cfg->Get("rabbit_mq","queue","anod_queue").toString();
 
@@ -49,6 +49,10 @@ void QRabbitMQ::clientConnected()
     connect(queue, SIGNAL(declared()), this, SLOT(queueDeclared()));
     queue->declare(QAmqpQueue::NoOptions);//这里需要加QAmqpQueue::NoOptions，因为默认是自动删除，可能会被删掉
     qDebug() << "RabbitMQ connect to server ok";
+
+//    Durable = 0x02,
+//    NoOptions = 0x00,
+//    AutoDelete = 0x08,
 }
 
 void QRabbitMQ::exchangeDeclared()
@@ -60,7 +64,11 @@ void QRabbitMQ::queueDeclared()
 {
     QAmqpQueue *queue = qobject_cast<QAmqpQueue*>(sender());
     if (!queue)
+        {
+        qDebug() << "mq queue 无效";
         return;
+    }
+
     QAmqpExchange *defaultExchange = m_client.createExchange();
     globalexchanger = defaultExchange;
 }
@@ -79,7 +87,10 @@ void QRabbitMQ::messageReceived()
 void QRabbitMQ::sendMsg(const QString &msg)
 {
     if(!globalexchanger)
-        return;
+    {
+    qDebug() << "mq globalexchanger 无效";
+    return;
+}
     globalexchanger->publish(msg, queues);
     qDebug() << " sendMsg() Sent "<<msg;
 }
