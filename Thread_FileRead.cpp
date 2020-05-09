@@ -8,13 +8,17 @@
         hislog->isok = true;
 //        hislog->isok = false;
 
-
+//改为读取配置文件内容
+        con_p = new Readconfig();
+        defaultpath = con_p->Get_and_Default("FileWatcher","Defaultpath","C:/Users/gyshao/Desktop/data").toString();
+        qDebug()<<defaultpath;
     }
 
     Thread_FileRead::~Thread_FileRead()
     {
                 delete fswatcher;
                 delete m_pTimer;
+
             for(int i=0;i<FILENUM;i++)
             {
     //            if(true == myfile[i].isOK)
@@ -25,6 +29,7 @@
     //            delete myfile[i].pfile;
             }
             delete hislog;
+            delete  con_p;
     }
 
     void Thread_FileRead::doWork()

@@ -22,7 +22,7 @@
 #include  "protocol/protocol.h"
 #include "hislog/HistoryLog.h"
 #include  "rabbitmq/QRabbitMQ.h"
-
+#include  "configlog/readconfig.h"
 
 #define TIMER_TIMEOUT   (5*1000)
 class QTimer;
@@ -51,7 +51,7 @@ private:
         const  QStringList defaultdirlist=(QStringList()<<"/Alarm/"<<"/Anod1-Historic/"<<"/Anod2-Historic/"
                                     <<"/Anod3-Historic/"<<"/TC_Data/"<<"/TC_Data/"<<"/TEMP-Historic/");
        // const   QString defaultpath="//10.10.10.98/anodize_data";
-        QString defaultpath="C:/Users/gyshao/Desktop/data";
+        QString defaultpath;
 
         QTimer *m_pTimer;//定时器
 
@@ -63,7 +63,7 @@ private:
 
         QRabbitMQ *m_rabbitClient;
         void packJson(QString ,int);
-
+        Readconfig *con_p;
 
 public slots:
              void doWork();
