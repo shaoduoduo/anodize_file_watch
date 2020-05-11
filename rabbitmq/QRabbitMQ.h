@@ -50,12 +50,13 @@ private:
 
 
 
-    QString ip;
+
     QString usrname;
     QString pwd;
     QString virtualhost;
     QString queues;
-
+public:
+     QString ip;
 };
 
 #endif // QRABBITMQ_H

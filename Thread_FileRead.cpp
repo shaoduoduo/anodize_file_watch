@@ -41,6 +41,7 @@
     void Thread_FileRead::start()
     {
          m_rabbitClient =  new QRabbitMQ();
+         emit signalFiledebug("mq IP 为"+m_rabbitClient->ip);
 //         QThread::msleep(5000);
 //         doWork();
 //         qDebug()<<m_rabbitClient->open_flag;
@@ -443,9 +444,14 @@
 
     void Thread_FileRead::handleTimeout()
     {
+        static int static_cnt = 0;
         if(m_pTimer->isActive()){
             m_pTimer->start();
         }
+    if(((static_cnt++ %10)==0) && (m_rabbitClient->open_flag == false))
+    {
+    emit signalFiledebug("mq没有成功连接");
+    }
         if((m_rabbitClient->open_flag == true )&& (FW_Flag == false))
             doWork();//启动文件监视器
         hislog->trigsavejson();//定时保存记录
