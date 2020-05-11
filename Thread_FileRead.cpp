@@ -80,7 +80,15 @@
             /****************
             取消更新部分，统一使用更新函数updateinfo,调用之前，更新myfile信息，传入hislog，根据记录更新读取的信息
             ****************/
+
         }
+
+        qDebug()<<0<<"++"<<myfile[0].srcDirPath;
+        qDebug()<<1<<"++"<<myfile[1].srcDirPath;
+        qDebug()<<2<<"++"<<myfile[2].srcDirPath;
+        qDebug()<<3<<"++"<<myfile[3].srcDirPath;
+        qDebug()<<4<<"++"<<myfile[4].srcDirPath;
+        qDebug()<<5<<"++"<<myfile[5].srcDirPath;
 
     }
 
@@ -135,14 +143,14 @@
 
                     if(true==isOK)
                     {
-                        QString str = myfile[i].fileDirPath+"路径监视成功";
+                        QString str = myfile[i].fileDirPath+"文件目录路径监视成功";
                         qDebug()<<str;
                         emit  signalFiledebug(str);
                     }
 
                     else
                     {
-                        QString str = myfile[i].fileDirPath+"路径监视添加失败";
+                        QString str = myfile[i].fileDirPath+"文件目录路径监视添加失败";
                         qDebug()<<str;
                         emit  signalFiledebug(str);
                     }
@@ -151,13 +159,13 @@
                         isOK= fswatcher->addPath(myfile[i].srcDirPath);
                      if(true==isOK)
                      {
-                         QString str = myfile[i].srcDirPath+"路径监视成功";
+                         QString str = myfile[i].srcDirPath+"文件路径路径监视成功";
                          qDebug()<<str;
                          emit  signalFiledebug(str);
                      }
                      else
                      {
-                         QString str = myfile[i].srcDirPath+"路径监视成功";
+                         QString str = myfile[i].srcDirPath+"文件路径路径监视成功";
                          qDebug()<<str;
                          emit  signalFiledebug(str);
                      }
@@ -179,9 +187,9 @@
         int i =0;
 
         {
-            QString str = path+"-------dir修改";
-            qDebug()<<str;
-            emit  signalFiledebug(str);
+//            QString str = path+"-------dir修改";
+//            qDebug()<<str;
+//            emit  signalFiledebug(str);
         }
 //                  有文件被修改
 //                  1、文件数量变更
@@ -194,6 +202,10 @@
         {
             if(path == myfile[i].fileDirPath)
                 break;
+        }
+
+        if(i==TCDATA1||i==TCDATA2){//天车数据不会新增文件 ,路径变更不做修改
+            return;
         }
         if(true==myfile[i].isOK)
         {
@@ -250,10 +262,17 @@
         for(i=0;i<FILENUM;i++)//make sure which file is changed
         {
             if(path == myfile[i].srcDirPath){
+
                 updateinfo(&myfile[i],hislog,i);
                 break;
                 }
         }
+        qDebug()<<0<<path<<"++"<<myfile[0].srcDirPath;
+        qDebug()<<1<<path<<"++"<<myfile[1].srcDirPath;
+        qDebug()<<2<<path<<"++"<<myfile[2].srcDirPath;
+        qDebug()<<3<<path<<"++"<<myfile[3].srcDirPath;
+        qDebug()<<4<<path<<"++"<<myfile[4].srcDirPath;
+        qDebug()<<5<<path<<"++"<<myfile[5].srcDirPath;
 
     }
 
@@ -303,20 +322,24 @@
 
                         return;
                     }
+
                         if(i==TCDATA1)//针对天车数据，专门进行特殊处理
                             ptrfile->srcDirPath =ptrfile->fileDirPath+ptrfile->filelist.at(0);
                         else
                             ptrfile->srcDirPath =ptrfile->fileDirPath+ptrfile->filelist.at(1);
+
                 }
-                QThread::msleep(500);
+
+                QThread::msleep(10);
                 ptrfile->pfile=new QFile(ptrfile->srcDirPath);
                 ptrfile->isOK = ptrfile->pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
+//                qDebug()<<i<<"文件路径----》》》》"<<ptrfile->srcDirPath;
                 if(true == ptrfile->isOK)
                 {
 //                    qDebug()<<"打开文件成功";
                     {
                         QString str ="打开文件成功"+ptrfile->srcDirPath;
-                        qDebug()<<str;
+//                        qDebug()<<str;
                         emit  signalFiledebug(str);
                     }
 
@@ -354,10 +377,11 @@
                 {
                     for(int j=index+1;j<myfile[i].filelist.size();j++)
                     {
-                        ptrfile->srcDirPath=ptrfile->fileDirPath+ptrfile->filelist.at(j);//具体文件路径
                         if(i==TCDATA1||i==TCDATA2){//天车数据不会新增文件
                             continue;
                         }
+                        ptrfile->srcDirPath=ptrfile->fileDirPath+ptrfile->filelist.at(j);//具体文件路径
+
                         ptrfile->pfile->setFileName(ptrfile->srcDirPath);
                         ptrfile->isOK = ptrfile->pfile->open(QIODevice::ReadOnly);//以只读的方式打开文件
                         if(true == ptrfile->isOK)
@@ -544,7 +568,7 @@
                 break;
             case TCDATA1:
                 {
-                qDebug()<<paralist<<paralist.size();
+                qDebug()<<"发送TC数据"<<paralist<<paralist.size();
                 paralist = datastr.split('\t');
                 if (paralist.size()!=6)
                     return;//无效数据
