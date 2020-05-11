@@ -22,6 +22,7 @@ public:
 
     void sendMsg(const QString &msg);
     QAmqpExchange *globalexchanger;
+    bool open_flag = false;
 signals:
     void msgSig(QString msg);
 

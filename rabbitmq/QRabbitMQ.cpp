@@ -49,7 +49,7 @@ void QRabbitMQ::clientConnected()
     connect(queue, SIGNAL(declared()), this, SLOT(queueDeclared()));
     queue->declare(QAmqpQueue::NoOptions);//这里需要加QAmqpQueue::NoOptions，因为默认是自动删除，可能会被删掉
     qDebug() << "RabbitMQ connect to server ok";
-
+    open_flag = true;
 //    Durable = 0x02,
 //    NoOptions = 0x00,
 //    AutoDelete = 0x08,

@@ -91,3 +91,14 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-untitled1-Desk
 
 INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/QAMQP
 DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Debug/QAMQP
+
+
+
+#INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/QAMQP
+#DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/QAMQP
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/bin/ -lqamqp
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/bin/ -lqamqpd
+
+#INCLUDEPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/QAMQP
+#DEPENDPATH += $$PWD/../build-untitled1-Desktop_Qt_5_13_1_MinGW_32_bit-Release/QAMQP

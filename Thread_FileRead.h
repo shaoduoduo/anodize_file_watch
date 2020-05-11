@@ -24,7 +24,7 @@
 #include  "rabbitmq/QRabbitMQ.h"
 #include  "configlog/readconfig.h"
 
-#define TIMER_TIMEOUT   (5*1000)
+#define TIMER_TIMEOUT   (1000)
 class QTimer;
 class Thread_FileRead  : public MoveToThreadTest
 {
@@ -45,8 +45,9 @@ signals:
 private:
 //读文件相关
 
-        QFileSystemWatcher *fswatcher;//文件监视器
-        void    Start_file_watcher();
+        QFileSystemWatcher *fswatcher = nullptr;//文件监视器
+        bool FW_Flag = false;
+        bool    Start_file_watcher();
 
         Fileinfo_Class  myfile[FILENUM];        //面向文件操作的类
 

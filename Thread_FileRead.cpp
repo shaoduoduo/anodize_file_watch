@@ -21,41 +21,35 @@
 
     Thread_FileRead::~Thread_FileRead()
     {
+
+        hislog->trigsavejson();//保存记录
+        if (fswatcher != nullptr)
                 delete fswatcher;
                 delete m_pTimer;
-
-            for(int i=0;i<FILENUM;i++)
-            {
-    //            if(true == myfile[i].isOK)
-    //            {
-    //                delete myfile[i].textStream;
-    //            }
-    //            myfile[i].pfile->close();
-    //            delete myfile[i].pfile;
-            }
-            delete hislog;
-            delete  con_p;
+                delete hislog;
+                delete  con_p;
     }
 
     void Thread_FileRead::doWork()
     {
 
-            m_rabbitClient =  new QRabbitMQ();
 //            while(!m_rabbitClient->globalexchanger){}
-            fileread_init();//文件初始化，读取当前已有文件内容//读取失败，对方未开机。如何处理？？更新的读取进度应该和数据库内容一致才行。
-            Start_file_watcher();//监视当前有效的路径和最新的文件
-            m_pTimer = new QTimer(this);
-            connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-            m_pTimer->start(TIMER_TIMEOUT);
-
-
-
-
+            fileread_init();    //文件初始化，读取当前已有文件内容//读取失败，对方未开机。如何处理？？更新的读取进度应该和数据库内容一致才行。
+           FW_Flag =  Start_file_watcher();   //监视当前有效的路径和最新的文件
     }
 
     void Thread_FileRead::start()
     {
-        doWork();
+         m_rabbitClient =  new QRabbitMQ();
+//         QThread::msleep(5000);
+//         doWork();
+//         qDebug()<<m_rabbitClient->open_flag;
+         m_pTimer = new QTimer(this);
+         connect(m_pTimer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
+         m_pTimer->start(TIMER_TIMEOUT);
+
+
+
     }
 
     void Thread_FileRead::stop()
@@ -83,12 +77,12 @@
 
         }
 
-        qDebug()<<0<<"++"<<myfile[0].srcDirPath;
-        qDebug()<<1<<"++"<<myfile[1].srcDirPath;
-        qDebug()<<2<<"++"<<myfile[2].srcDirPath;
-        qDebug()<<3<<"++"<<myfile[3].srcDirPath;
-        qDebug()<<4<<"++"<<myfile[4].srcDirPath;
-        qDebug()<<5<<"++"<<myfile[5].srcDirPath;
+//        qDebug()<<0<<"++"<<myfile[0].srcDirPath;
+//        qDebug()<<1<<"++"<<myfile[1].srcDirPath;
+//        qDebug()<<2<<"++"<<myfile[2].srcDirPath;
+//        qDebug()<<3<<"++"<<myfile[3].srcDirPath;
+//        qDebug()<<4<<"++"<<myfile[4].srcDirPath;
+//        qDebug()<<5<<"++"<<myfile[5].srcDirPath;
 
     }
 
@@ -133,7 +127,7 @@
 
 }
 
-    void Thread_FileRead::Start_file_watcher(void)
+    bool Thread_FileRead::Start_file_watcher(void)
 {
           fswatcher = new QFileSystemWatcher();
                for(int i=0;i<FILENUM;i++)
@@ -173,6 +167,7 @@
                }
                 connect(fswatcher,SIGNAL(directoryChanged(QString)),this,SLOT(dirChanged(QString)));
                 connect(fswatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
+                return true;
 }
 
     void    Thread_FileRead::dealmesfrommain(QString s)
@@ -267,12 +262,12 @@
                 break;
                 }
         }
-        qDebug()<<0<<path<<"++"<<myfile[0].srcDirPath;
-        qDebug()<<1<<path<<"++"<<myfile[1].srcDirPath;
-        qDebug()<<2<<path<<"++"<<myfile[2].srcDirPath;
-        qDebug()<<3<<path<<"++"<<myfile[3].srcDirPath;
-        qDebug()<<4<<path<<"++"<<myfile[4].srcDirPath;
-        qDebug()<<5<<path<<"++"<<myfile[5].srcDirPath;
+//        qDebug()<<0<<path<<"++"<<myfile[0].srcDirPath;
+//        qDebug()<<1<<path<<"++"<<myfile[1].srcDirPath;
+//        qDebug()<<2<<path<<"++"<<myfile[2].srcDirPath;
+//        qDebug()<<3<<path<<"++"<<myfile[3].srcDirPath;
+//        qDebug()<<4<<path<<"++"<<myfile[4].srcDirPath;
+//        qDebug()<<5<<path<<"++"<<myfile[5].srcDirPath;
 
     }
 
@@ -451,6 +446,8 @@
         if(m_pTimer->isActive()){
             m_pTimer->start();
         }
+        if((m_rabbitClient->open_flag == true )&& (FW_Flag == false))
+            doWork();//启动文件监视器
         hislog->trigsavejson();//定时保存记录
 
     }

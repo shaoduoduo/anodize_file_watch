@@ -96,8 +96,6 @@ bool HistoryLog::savejson(QString path)
    QFile file(path);
    file.open(QIODevice::WriteOnly);
    file.write(data);
-//   qint64 lines = file.write(data);
-//   qDebug()<<lines<<"file.write bytes actually";
    file.close();
    return true;
 }
