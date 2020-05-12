@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_start->setEnabled(false);//关闭开始按键
 //    qInstallMessageHandler(myMessageOutput);//会将qudebug输出至文件，暂时不打开
 
-    ui->textBrowser_server->append(s.at(i));
+    ui->textBrowser_server->append("版本号： beta1.0");
 
 
     //获得IP
