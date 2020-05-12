@@ -11,7 +11,7 @@ QRabbitMQ::QRabbitMQ(QObject *parent) :
 
     /*
     */
-    Readconfig *m_cfg = new Readconfig("../build-untitled1-Desktop_Qt_5_13_1_MinGW_64_bit-Release/config.ini");
+    Readconfig *m_cfg = new Readconfig("./config.ini");
 
     ip=m_cfg->Get("rabbit_mq","ip","127.0.0.1").toString();
     usrname = m_cfg->Get("rabbit_mq","usrname","anodize_qt").toString();

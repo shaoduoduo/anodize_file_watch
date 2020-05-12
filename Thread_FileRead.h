@@ -23,7 +23,7 @@
 #include "hislog/HistoryLog.h"
 #include  "rabbitmq/QRabbitMQ.h"
 #include  "configlog/readconfig.h"
-
+#include  <QDir>
 #define TIMER_TIMEOUT   (1000)
 class QTimer;
 class Thread_FileRead  : public MoveToThreadTest

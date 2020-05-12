@@ -8,12 +8,15 @@
         hislog->isok = true;
 //        hislog->isok = false;
 
+
+
+
+
 //改为读取配置文件内容
         con_p = new Readconfig();
-        defaultpath = con_p->Get_and_Default("FileWatcher","Defaultpath","C:/Users/gyshao/Desktop/data").toString();
+        defaultpath = con_p->Get("FileWatcher","Defaultpath","C:/Users/gyshao/Desktop/data").toString();
 //        qDebug()<<defaultpath;
-
-
+        delete  con_p;
 
 
 
@@ -27,7 +30,7 @@
                 delete fswatcher;
                 delete m_pTimer;
                 delete hislog;
-                delete  con_p;
+
     }
 
     void Thread_FileRead::doWork()
@@ -40,6 +43,23 @@
 
     void Thread_FileRead::start()
     {
+
+
+        emit  signalFiledebug("当前程序目录"+QDir::currentPath());
+
+
+         QDir dir(QDir::currentPath());
+         QStringList nameFilters;
+//         nameFilters << "*.ini";
+         QStringList files = dir.entryList(nameFilters, QDir::Files|QDir::Readable, QDir::Name);
+         emit  signalFiledebug("当前程序目录下文件");
+         emit  signalFileStr(files);
+
+         Readconfig *con_temp = new Readconfig();
+         defaultpath = con_temp->Get("FileWatcher","Defaultpath").toString();
+         emit  signalFiledebug("当前配置文件内容 defaultpath  "+defaultpath+"当前配置文件内容 ip  "+con_temp->Get("rabbit_mq","ip").toString());
+         delete  con_temp;
+
          m_rabbitClient =  new QRabbitMQ();
          emit signalFiledebug("mq IP 为"+m_rabbitClient->ip);
 //         QThread::msleep(5000);
@@ -450,9 +470,9 @@
         }
     if(((static_cnt++ %10)==0) && (m_rabbitClient->open_flag == false))
     {
-    emit signalFiledebug("mq没有成功连接");
+        emit signalFiledebug("mq没有成功连接");
     }
-        if((m_rabbitClient->open_flag == true )&& (FW_Flag == false))
+        if((m_rabbitClient->open_flag == true )&&(FW_Flag == false))
             doWork();//启动文件监视器
         hislog->trigsavejson();//定时保存记录
 

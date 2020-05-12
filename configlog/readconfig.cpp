@@ -16,7 +16,7 @@ Readconfig::Readconfig(QString qstrfilename)
 Readconfig::~Readconfig()
 {
     delete m_psetting;
-    m_psetting = NULL;
+    m_psetting = nullptr;
 
 }
 
