@@ -187,9 +187,3 @@ QJsonObject::iterator HistoryLog::insertkey(QString key,QJsonObject obj)
         QJsonObject::iterator it = globalobj.insert(key,QJsonValue(obj));
         return it;
 }
-
-//QJsonObject obj;
-//QJsonObject sub;
-//sub.insert("ip",QJsonValue("192.168.0.1"));
-//sub.insert("port",QJsonValue("8080"));
-//obj.insert("server",QJsonValue(sub));

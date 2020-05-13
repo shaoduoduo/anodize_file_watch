@@ -493,12 +493,14 @@
                 if (paralist.size()!=4)
                     return;//无效数据
 //                日期	时间	状态	消息
-
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
                 obj.insert("date",paralist.at(0));
                 obj.insert("time",paralist.at(1));
                 obj.insert("status",paralist.at(2));
                 obj.insert("msg",paralist.at(3));
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -516,7 +518,9 @@
                     return;//无效数据
 
 //                Date	Time	电流PV	电压PV	电流SV	电压SV
-
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
 
 
                 obj.insert("date",paralist.at(0));
@@ -526,7 +530,7 @@
                 obj.insert("csv",paralist.at(4));
                 obj.insert("vsv",paralist.at(5));
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -544,7 +548,9 @@
                     return;//无效数据
 
         //                Date	Time	电流PV	电压PV	电流SV	电压SV
-
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
 
 
                 obj.insert("date",paralist.at(0));
@@ -554,7 +560,7 @@
                 obj.insert("csv",paralist.at(4));
                 obj.insert("vsv",paralist.at(5));
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -567,11 +573,13 @@
                 {
                 paralist = datastr.split('\t');
                 if (paralist.size()!=6)
+
                     return;//无效数据
 
         //                Date	Time	电流PV	电压PV	电流SV	电压SV
-
-
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
 
                 obj.insert("date",paralist.at(0));
                 obj.insert("time",paralist.at(1));
@@ -580,7 +588,7 @@
                 obj.insert("csv",paralist.at(4));
                 obj.insert("vsv",paralist.at(5));
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -595,6 +603,12 @@
                 paralist = datastr.split('\t');
                 if (paralist.size()!=6)
                     return;//无效数据
+
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
+
+
 //            Date	Time	编号	      条  码	位置	动作
                 obj.insert("date",paralist.at(0));
                 obj.insert("time",paralist.at(1));
@@ -603,7 +617,7 @@
                 obj.insert("position",paralist.at(4));
                 obj.insert("action",paralist.at(5));
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -616,6 +630,9 @@
                 paralist = datastr.split('\t');
                 if (paralist.size()!=6)
                     return;//无效数据
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
         //            Date	Time	编号	      条  码	位置	动作
                 obj.insert("date",paralist.at(0));
                 obj.insert("time",paralist.at(1));
@@ -624,7 +641,7 @@
                 obj.insert("position",paralist.at(4));
                 obj.insert("action",paralist.at(5));
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();
@@ -639,6 +656,9 @@
                         return;//无效数据
         //           Date	Time	A1	A3	A5	A7	A9	A11	A13	D1	D3	A16	A18	A20	S1	S2	S3
 
+                for (int i =0;i<paralist.size();i++)
+                        if(paralist.at(i)=="")
+                            paralist[i] ="0";
                 obj.insert("date",paralist.at(0));
                 obj.insert("time",paralist.at(1));
                 obj.insert("A1",paralist.at(2));
@@ -658,7 +678,7 @@
                 obj.insert("S3",paralist.at(16));
 
 
-                ObjF.insert("PRO_INDEX_ANODIZE:",item);
+                ObjF.insert("PRO_INDEX_ANODIZE",item);
                 ObjF.insert("data",obj);
                 QJsonDocument doc(ObjF);
                 QByteArray databyte= doc.toJson();

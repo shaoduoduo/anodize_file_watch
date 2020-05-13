@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_start->setEnabled(false);//关闭开始按键
 //    qInstallMessageHandler(myMessageOutput);//会将qudebug输出至文件，暂时不打开
 
-    ui->textBrowser_server->append("版本号： beta1.0");
+    ui->textBrowser_server->append("版本号： beta1.1  2020年5月13日");
 
 
     //获得IP
@@ -261,8 +261,8 @@ void MainWindow::deal_from_client(QStringList s)
 void MainWindow::on_pushButton_clicked()
 {
     //ui->stackedWidget->setCurrentIndex(3);
-
-
+//    ui->textBrowser_server->clear();
+    ui->text_output->clear();
 
 
 }
